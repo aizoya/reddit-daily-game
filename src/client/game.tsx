@@ -146,6 +146,11 @@ export const App = () => {
         One Fare
       </h1>
       <p className="font-meter text-xs text-mute">
+        {puzzle.theme.name ? (
+          <span className="mr-2 font-sans font-bold text-white">
+            {puzzle.theme.name}
+          </span>
+        ) : null}
         #{puzzleNumber(puzzle.date)} · {shortDate(puzzle.date)}
       </p>
     </header>
@@ -187,9 +192,9 @@ export const App = () => {
   return (
     <main className="mx-auto flex h-full max-w-md flex-col gap-2 p-3">
       {header}
-      <p className="min-h-12 text-[13px] leading-4 text-mute">
+      <p className="min-h-16 text-[13px] leading-4 text-mute">
         {order.length === 0
-          ? 'Tap fares in the order you would drive them: circle is the pickup, square is the drop-off. A fare only pays if you have the fuel to finish it.'
+          ? `${puzzle.theme.blurb} Tap fares in the order you would drive them: circle is the pickup, square is the drop-off. A fare only pays if you have the fuel to finish it.`
           : `${order.length} ${order.length === 1 ? 'fare' : 'fares'} planned. Tap a fare again to drop it.`}
       </p>
       <div className="flex min-h-0 flex-1 items-center justify-center">

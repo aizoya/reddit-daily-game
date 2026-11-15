@@ -1,5 +1,16 @@
 import { reddit, redis } from '@devvit/web/server';
-import { puzzleNumber, shortDate, todayUtc } from '../../shared/onefare';
+import {
+  puzzleNumber,
+  shortDate,
+  themeFor,
+  todayUtc,
+} from '../../shared/onefare';
+
+const postTitle = (date: string): string => {
+  const theme = themeFor(date);
+  const lead = theme.name ? `${theme.name}. ` : '';
+  return `One Fare #${puzzleNumber(date)} (${shortDate(date)}): ${lead}${theme.blurb} Best shift wins.`;
+};
 
 const postKey = (date: string): string => `post:${date}`;
 
@@ -11,7 +22,7 @@ export const ensureDailyPost = async (
   if (existing) return { id: existing, created: false };
 
   const post = await reddit.submitCustomPost({
-    title: `One Fare #${puzzleNumber(date)} (${shortDate(date)}): seven fares, one tank. Best shift wins.`,
+    title: postTitle(date),
     entry: 'default',
     postData: { date },
   });
