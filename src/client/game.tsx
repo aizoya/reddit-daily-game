@@ -159,6 +159,7 @@ export const App = () => {
           <CityMap
             puzzle={puzzle}
             order={shown}
+            drive
             label={showingBest ? 'The best route today' : 'Your route today'}
           />
         </div>

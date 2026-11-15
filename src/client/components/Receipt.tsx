@@ -1,12 +1,28 @@
+import { useEffect, useState } from 'react';
 import type { SavedShift } from '../../shared/api';
 import type { Puzzle } from '../../shared/onefare';
 import {
   RATING_LABEL,
   fareLetter,
+  formatCountdown,
+  minutesToNextCity,
   puzzleNumber,
   rate,
   shortDate,
+  todayUtc,
 } from '../../shared/onefare';
+
+// Re-reads the clock once a minute so the countdown stays honest without a busy timer.
+const useNextCity = (date: string): string => {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(timer);
+  }, []);
+  return date === todayUtc(now)
+    ? `New city in ${formatCountdown(minutesToNextCity(now))}.`
+    : 'A newer city is waiting in the latest post.';
+};
 
 type ReceiptProps = {
   puzzle: Puzzle;
@@ -35,6 +51,7 @@ export const Receipt = ({
   const best = puzzle.best.earnings;
   const rating = rate(result.earnings, best);
   const left = best - result.earnings;
+  const nextCity = useNextCity(puzzle.date);
   const fares = result.completed.flatMap((id) => {
     const fare = puzzle.fares.find((candidate) => candidate.id === id);
     return fare === undefined ? [] : [fare];
@@ -114,8 +131,8 @@ export const Receipt = ({
         </button>
       </div>
       <p className="mt-2 text-center font-sans text-xs text-mute">
-        Think there was a better line? Argue your route in the comments. New
-        city tomorrow.
+        Think there was a better line? Argue your route in the comments.{' '}
+        {nextCity}
       </p>
     </section>
   );

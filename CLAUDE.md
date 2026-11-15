@@ -32,7 +32,7 @@ streaks, and a reason to comment.
 `npm run test:types`, `npm run lint`, `npm run test:unit`, `npm run build`. CI runs all four on every push.
 For `claude/*` branches CI also force-pushes the built client to `preview/<branch>`; see `tools/preview/README.md`
 for serving and screenshotting it. A preview screenshot is not a Reddit playtest.
-There is no `package-lock.json` yet; generate and commit one from the first machine that can run `npm install`.
+`package-lock.json` is committed and CI installs with `npm ci`; update the lockfile from the Codespace, not by hand.
 
 ## Not done yet
 

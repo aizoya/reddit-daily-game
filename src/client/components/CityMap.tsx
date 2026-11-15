@@ -117,14 +117,21 @@ type CityMapProps = {
   order: readonly number[];
   blocked?: ReadonlySet<number> | undefined;
   onPick?: ((id: number) => void) | undefined;
+  // Drive the cab along the route once. Used on the result screen.
+  drive?: boolean | undefined;
   label: string;
 };
+
+const prefersReducedMotion = (): boolean =>
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export const CityMap = ({
   puzzle,
   order,
   blocked,
   onPick,
+  drive,
   label,
 }: CityMapProps) => {
   const width = puzzle.width * UNIT;
@@ -134,6 +141,14 @@ export const CityMap = ({
     for (let x = 0; x < puzzle.width - 1; x++) blocks.push({ x, y });
   }
   const legs = routeLegs(puzzle, order);
+  const driving = drive === true && legs.length > 0 && !prefersReducedMotion();
+  // One continuous path through every leg, relative to the cab's starting corner.
+  const drivePath = legs
+    .map(
+      ({ from, to }, index) =>
+        `${index === 0 ? `M ${at(from.x)} ${at(from.y)} ` : ''}L ${at(to.x)} ${at(from.y)} L ${at(to.x)} ${at(to.y)}`
+    )
+    .join(' ');
 
   return (
     <svg
@@ -181,7 +196,22 @@ export const CityMap = ({
         );
       })}
       {/* The cab: where the shift starts. */}
-      <g transform={`translate(${at(puzzle.start.x)} ${at(puzzle.start.y)})`}>
+      <g
+        key={driving ? order.join('-') : 'parked'}
+        transform={
+          driving
+            ? undefined
+            : `translate(${at(puzzle.start.x)} ${at(puzzle.start.y)})`
+        }
+      >
+        {driving ? (
+          <animateMotion
+            path={drivePath}
+            dur={`${Math.min(3.2, 0.9 + legs.length * 0.28)}s`}
+            fill="freeze"
+            calcMode="linear"
+          />
+        ) : null}
         <rect
           x={-30}
           y={-20}

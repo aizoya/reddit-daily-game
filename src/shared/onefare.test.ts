@@ -133,3 +133,13 @@ test('dates, numbering and post data', async () => {
     'One Fare #2: $41 of $46, 22/26 fuel'
   );
 });
+
+test('countdown to the next city', async () => {
+  const m = await import('./onefare.ts');
+  assert.equal(m.minutesToNextCity(new Date('2026-11-15T21:48:00Z')), 132);
+  assert.equal(m.minutesToNextCity(new Date('2026-11-15T23:59:30Z')), 1);
+  assert.equal(m.minutesToNextCity(new Date('2026-12-31T23:00:00Z')), 60);
+  assert.equal(m.formatCountdown(132), '2h 12m');
+  assert.equal(m.formatCountdown(60), '1h');
+  assert.equal(m.formatCountdown(7), '7m');
+});

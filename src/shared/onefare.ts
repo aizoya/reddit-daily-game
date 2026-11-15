@@ -265,3 +265,20 @@ export const shareLine = (
   fuel: number
 ): string =>
   `One Fare #${puzzleNumber(date)}: $${earnings} of $${bestEarnings}, ${fuelUsed}/${fuel} fuel`;
+
+// Minutes until the next UTC day starts, which is when the next city is posted.
+export const minutesToNextCity = (now: Date = new Date()): number => {
+  const next = Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate() + 1
+  );
+  return Math.max(1, Math.ceil((next - now.getTime()) / 60000));
+};
+
+export const formatCountdown = (minutes: number): string => {
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  if (hours === 0) return `${rest}m`;
+  return rest === 0 ? `${hours}h` : `${hours}h ${rest}m`;
+};
