@@ -36,6 +36,7 @@ There is no `package-lock.json` yet; generate and commit one from the first mach
 
 ## Not done yet
 
-- No playtest on Reddit, no upload, no publish.
+- Playtested once on Reddit (2026-11-15, private version 0.0.1.x in r/aizoya_daily_dev): post creation, play, submit, receipt and streak worked for one player. Not published.
+- Playtests run from a GitHub Codespace on this repo (`npx devvit login --copy-paste`, then `npm run dev`); the authoring workspace cannot install packages.
 - Devvit Journeys instrumentation (judges ask for it) needs the `@devvit/analytics` package.
 - Difficulty tuning, a how-to-play first-run hint on the map, sound/haptics, and a subreddit subscribe prompt on the receipt.

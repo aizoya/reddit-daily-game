@@ -16,11 +16,11 @@ export const Splash = () => {
   const date = dateFromPostData(context.postData) ?? todayUtc();
   const puzzle = generatePuzzle(date);
   return (
-    <main className="flex h-full items-center justify-center gap-4 p-4">
-      <div className="aspect-square w-[44%] max-w-56 shrink-0">
+    <main className="flex h-full items-center justify-center gap-4 p-4 portrait:flex-col portrait:gap-5">
+      <div className="aspect-square w-[44%] max-w-56 shrink-0 portrait:w-[78%] portrait:max-w-80">
         <CityMap puzzle={puzzle} order={[]} label="Today's city" />
       </div>
-      <div className="flex min-w-0 flex-1 flex-col gap-2">
+      <div className="flex min-w-0 flex-1 flex-col gap-2 portrait:flex-none portrait:items-center portrait:text-center">
         <p className="font-meter text-xs whitespace-nowrap text-mute">
           #{puzzleNumber(date)} · {shortDate(date)}
         </p>
@@ -32,7 +32,7 @@ export const Splash = () => {
         </p>
         <button
           type="button"
-          className="mt-1 h-11 self-start rounded-full bg-cab px-5 text-base font-extrabold whitespace-nowrap text-ink active:bg-cab-deep"
+          className="mt-1 h-11 self-start rounded-full bg-cab px-5 text-base font-extrabold whitespace-nowrap text-ink active:bg-cab-deep portrait:h-12 portrait:self-center portrait:px-8"
           onClick={(e) => requestExpandedMode(e.nativeEvent, 'game')}
         >
           Start shift
