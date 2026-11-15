@@ -1,1 +1,55 @@
 @import 'tailwindcss';
+
+@theme {
+  --color-night: #0b1524;
+  --color-asphalt: #101d31;
+  --color-block: #182a44;
+  --color-line: #2a3f5f;
+  --color-cab: #ffc233;
+  --color-cab-deep: #e0a100;
+  --color-paper: #f6f1e4;
+  --color-ink: #1b1a17;
+  --color-mute: #8fa3c0;
+  --font-meter: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+}
+
+html,
+body {
+  background: var(--color-night);
+  color: #e8eef8;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+button {
+  touch-action: manipulation;
+}
+
+/* The receipt's torn edge. */
+.receipt-edge {
+  background:
+    linear-gradient(-45deg, transparent 6px, var(--color-paper) 0) 0 0 / 12px 100%,
+    linear-gradient(45deg, transparent 6px, var(--color-paper) 0) 0 0 / 12px 100%;
+  height: 8px;
+}
+
+@keyframes receipt-in {
+  from {
+    transform: translateY(18px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.receipt-in {
+  animation: receipt-in 260ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .receipt-in {
+    animation: none;
+  }
+}

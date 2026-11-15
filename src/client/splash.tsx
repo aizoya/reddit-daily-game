@@ -1,61 +1,44 @@
 import './index.css';
 
-import { navigateTo } from '@devvit/web/client';
 import { context, requestExpandedMode } from '@devvit/web/client';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { CityMap } from './components/CityMap';
+import {
+  dateFromPostData,
+  generatePuzzle,
+  puzzleNumber,
+  shortDate,
+  todayUtc,
+} from '../shared/onefare';
 
 export const Splash = () => {
+  const date = dateFromPostData(context.postData) ?? todayUtc();
+  const puzzle = generatePuzzle(date);
   return (
-    <div className="flex relative flex-col justify-center items-center min-h-screen gap-4 bg-white dark:bg-gray-900">
-      <img
-        className="object-contain w-1/2 max-w-[250px] mx-auto"
-        src="/snoo.png"
-        alt="Snoo"
-      />
-      <div className="flex flex-col items-center gap-2">
-        <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-white">
-          Hey {context.username ?? 'user'} 👋
-        </h1>
-        <p className="text-base text-center text-gray-600 dark:text-gray-300">
-          Edit{' '}
-          <span className="bg-[#e5ebee] dark:bg-gray-700 px-1 py-0.5 rounded">
-            src/client/splash.tsx
-          </span>{' '}
-          to get started.
-        </p>
+    <main className="flex h-full items-center justify-center gap-4 p-4">
+      <div className="aspect-square h-full max-h-56 shrink-0">
+        <CityMap puzzle={puzzle} order={[]} label="Today's city" />
       </div>
-      <div className="flex items-center justify-center mt-5">
+      <div className="flex min-w-0 flex-col gap-2">
+        <p className="font-meter text-xs text-mute">
+          #{puzzleNumber(date)} · {shortDate(date)}
+        </p>
+        <h1 className="text-3xl leading-none font-black tracking-tight text-cab uppercase">
+          One Fare
+        </h1>
+        <p className="text-sm leading-5 text-white">
+          Seven fares. One tank of fuel. Plan the shift that earns the most.
+        </p>
         <button
-          className="flex items-center justify-center bg-[#d93900] dark:bg-orange-600 text-white w-auto h-10 rounded-full cursor-pointer transition-colors px-4 hover:bg-[#c23300] dark:hover:bg-orange-700"
+          type="button"
+          className="mt-1 h-11 self-start rounded-full bg-cab px-6 text-base font-extrabold text-ink active:bg-cab-deep"
           onClick={(e) => requestExpandedMode(e.nativeEvent, 'game')}
         >
-          Tap to Start
+          Start shift
         </button>
       </div>
-      <footer className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3 text-[0.8em] text-gray-600 dark:text-gray-400">
-        <button
-          className="cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors"
-          onClick={() => navigateTo('https://developers.reddit.com/docs')}
-        >
-          Docs
-        </button>
-        <span className="text-gray-300 dark:text-gray-600">|</span>
-        <button
-          className="cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors"
-          onClick={() => navigateTo('https://www.reddit.com/r/Devvit')}
-        >
-          r/Devvit
-        </button>
-        <span className="text-gray-300 dark:text-gray-600">|</span>
-        <button
-          className="cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors"
-          onClick={() => navigateTo('https://discord.com/invite/R7yu2wh9Qz')}
-        >
-          Discord
-        </button>
-      </footer>
-    </div>
+    </main>
   );
 };
 

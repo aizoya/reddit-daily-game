@@ -111,3 +111,25 @@ test('ratings', () => {
   assert.equal(rate(30, 40), 'good');
   assert.equal(rate(10, 40), 'rough');
 });
+
+test('dates, numbering and post data', async () => {
+  const m = await import('./onefare.ts');
+  assert.equal(m.puzzleNumber('2026-11-15'), 1);
+  assert.equal(m.puzzleNumber('2026-12-08'), 24);
+  assert.equal(m.puzzleNumber('2026-01-01'), 1);
+  assert.equal(m.addDays('2026-11-30', 1), '2026-12-01');
+  assert.equal(m.addDays('2026-12-01', -1), '2026-11-30');
+  assert.equal(m.shortDate('2026-12-08'), 'Dec 8');
+  assert.equal(m.todayUtc(new Date('2026-11-15T23:59:59Z')), '2026-11-15');
+  assert.equal(m.dateFromPostData({ date: '2026-11-20' }), '2026-11-20');
+  assert.equal(m.dateFromPostData({ date: 'tomorrow' }), undefined);
+  assert.equal(m.dateFromPostData({ date: 20261120 }), undefined);
+  assert.equal(m.dateFromPostData(null), undefined);
+  assert.equal(m.dateFromPostData(undefined), undefined);
+  assert.equal(m.fareLetter(1), 'A');
+  assert.equal(m.fareLetter(7), 'G');
+  assert.equal(
+    m.shareLine('2026-11-16', 41, 46, 22, 26),
+    'One Fare #2: $41 of $46, 22/26 fuel'
+  );
+});

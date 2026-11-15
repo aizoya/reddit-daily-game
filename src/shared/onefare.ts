@@ -191,3 +191,77 @@ export const rate = (earnings: number, bestEarnings: number): Rating => {
   if (share >= 0.7) return 'good';
   return 'rough';
 };
+
+// --- Daily numbering -------------------------------------------------------
+
+export const LAUNCH_DATE = '2026-11-15';
+const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+export const isDateString = (value: unknown): value is string =>
+  typeof value === 'string' &&
+  DATE_PATTERN.test(value) &&
+  !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
+
+export const todayUtc = (now: Date = new Date()): string =>
+  now.toISOString().slice(0, 10);
+
+export const addDays = (date: string, days: number): string => {
+  const time = Date.parse(`${date}T00:00:00Z`) + days * 86400000;
+  return new Date(time).toISOString().slice(0, 10);
+};
+
+// Shift #1 is the launch date. Earlier dates still get a positive number so nothing breaks.
+export const puzzleNumber = (date: string): number => {
+  const days = Math.round(
+    (Date.parse(`${date}T00:00:00Z`) - Date.parse(`${LAUNCH_DATE}T00:00:00Z`)) /
+      86400000
+  );
+  return Math.max(1, days + 1);
+};
+
+const MONTHS = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+export const shortDate = (date: string): string => {
+  const month = MONTHS[Number(date.slice(5, 7)) - 1] ?? '';
+  return `${month} ${Number(date.slice(8, 10))}`;
+};
+
+// Post data arrives as loose JSON. Pull the date out without trusting its shape.
+export const dateFromPostData = (data: unknown): string | undefined => {
+  if (typeof data !== 'object' || data === null) return undefined;
+  const value: unknown = Reflect.get(data, 'date');
+  return isDateString(value) ? value : undefined;
+};
+
+export const fareLetter = (id: number): string =>
+  String.fromCharCode(64 + Math.max(1, Math.min(26, id)));
+
+export const RATING_LABEL: Record<Rating, string> = {
+  perfect: 'Perfect shift',
+  great: 'Great shift',
+  good: 'Solid shift',
+  rough: 'Rough night',
+};
+
+// One line a player can paste into the comments.
+export const shareLine = (
+  date: string,
+  earnings: number,
+  bestEarnings: number,
+  fuelUsed: number,
+  fuel: number
+): string =>
+  `One Fare #${puzzleNumber(date)}: $${earnings} of $${bestEarnings}, ${fuelUsed}/${fuel} fuel`;
