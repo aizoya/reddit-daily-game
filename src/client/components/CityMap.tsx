@@ -142,6 +142,10 @@ export const CityMap = ({
   }
   const legs = routeLegs(puzzle, order);
   const driving = drive === true && legs.length > 0 && !prefersReducedMotion();
+  // On the result screen the shift is over, so a cab that does not animate rests at the last stop.
+  const lastLeg = legs[legs.length - 1];
+  const parked =
+    drive === true && lastLeg !== undefined ? lastLeg.to : puzzle.start;
   // One continuous path through every leg, relative to the cab's starting corner.
   const drivePath = legs
     .map(
@@ -201,7 +205,7 @@ export const CityMap = ({
         transform={
           driving
             ? undefined
-            : `translate(${at(puzzle.start.x)} ${at(puzzle.start.y)})`
+            : `translate(${at(parked.x)} ${at(parked.y)})`
         }
       >
         {driving ? (
