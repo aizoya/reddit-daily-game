@@ -1,0 +1,29 @@
+import http from 'node:http';
+import fs from 'node:fs';
+import path from 'node:path';
+const root = process.argv[2];
+const game = await import(process.argv[3] + '/src/shared/onefare.ts');
+const stats = await import(process.argv[3] + '/src/shared/stats.ts');
+const date = process.argv[4] ?? '2026-11-15';
+const hist = { '20': '14', '25': '22', '31': '40', '36': '51', '40': '30' };
+const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.map': 'application/json' };
+http.createServer(async (req, res) => {
+  const url = new URL(req.url, 'http://x');
+  if (url.pathname === '/api/init') {
+    res.setHeader('content-type', 'application/json');
+    return res.end(JSON.stringify({ type: 'init', date, username: 'tester', players: 157, shift: null }));
+  }
+  if (url.pathname === '/api/submit') {
+    let body = ''; for await (const c of req) body += c;
+    const order = stats.parseOrder(JSON.parse(body).order) ?? [];
+    const puzzle = game.generatePuzzle(date);
+    const result = game.evaluatePlan(puzzle, order);
+    const h = { ...hist, [String(puzzle.best.earnings)]: '19' };
+    res.setHeader('content-type', 'application/json');
+    return res.end(JSON.stringify({ type: 'submit', date, shift: { result, stats: stats.computeDayStats(h, result.earnings, puzzle.best.earnings), streak: { current: 3, best: 5 }, saved: true } }));
+  }
+  const file = path.join(root, path.normalize(url.pathname === '/' ? '/game.html' : url.pathname));
+  if (!file.startsWith(root) || !fs.existsSync(file)) { res.statusCode = 404; return res.end('nf'); }
+  res.setHeader('content-type', types[path.extname(file)] ?? 'application/octet-stream');
+  fs.createReadStream(file).pipe(res);
+}).listen(4173, () => console.log('up'));
