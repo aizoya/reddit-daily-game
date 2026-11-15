@@ -42,5 +42,8 @@
         "cron": "5 0 * * *"
       }
     }
+  },
+  "dev": {
+    "subreddit": "aizoya_daily_dev"
   }
 }
