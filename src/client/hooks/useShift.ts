@@ -15,6 +15,7 @@ type ShiftState = {
   username: string | null;
   subreddit: string | null;
   joined: boolean;
+  userActions: boolean;
   players: number;
   shift: SavedShift | null;
   submitting: boolean;
@@ -37,6 +38,7 @@ export const useShift = () => {
     username: null,
     subreddit: null,
     joined: false,
+    userActions: false,
     players: 0,
     shift: null,
     submitting: false,
@@ -58,8 +60,10 @@ export const useShift = () => {
           username: data.username,
           subreddit: data.subreddit,
           joined: data.joined,
-          players: data.players,
-          shift: data.shift,
+          userActions: data.userActions,
+          players: Math.max(prev.players, data.players),
+          // A slow first load must never wipe a shift the player has just finished.
+          shift: prev.shift ?? data.shift,
         }));
       } catch (err) {
         console.error('Failed to load shift', err);

@@ -26,7 +26,15 @@ streaks, and a reason to comment.
 - `src/client/splash.tsx`: the inline feed view. Keep it light.
 - `src/server/core/store.ts`: Redis (shift per user per date, earnings histogram per date, streak per user). `core/post.ts`: one post per date.
 - `src/server/routes`: `api` (init, submit, comment, join), `menu`, `triggers`, `scheduler` (daily post, cron in `devvit.json`, UTC).
-- Posting a result as a comment uses `runAs: 'USER'` (`permissions.reddit.asUser` in `devvit.json`). Reddit's rules: only from an explicit button, tell the player first, never gate play on it, keep it a separate action. Until the app is approved it posts as the player only for the app owner; everyone else posts as the app account.
+- `src/server/core/config.ts`: `USER_ACTIONS_APPROVED` (false until Reddit approves a published version) and the owner
+  username. While false, Post my result and Join are offered to the owner only; everyone else gets Copy result.
+- User actions (`permissions.reddit.asUser` in `devvit.json`) follow Reddit's rules: explicit button, tell the player
+  exactly what will appear and under which account, never gate play, keep each action separate. Score comments are
+  posted as the player (`runAs: 'USER'`) as replies to one stickied app comment per post (`ensureScoreThread`).
+- Saving a shift is one Redis transaction (`watch`/`multi`/`exec`) over the shift, the day histogram and the streak.
+  One-time actions (daily post, score thread, comment) use an atomic `incrBy` claim, released if the action fails.
+- Streaks move only when the player finishes today's city (UTC); archive posts never change them. A streak shows as
+  0 once its last day is older than yesterday. Player keys expire after 30 days.
 
 ## Frozen puzzles
 
@@ -45,6 +53,13 @@ for serving and screenshotting it. A preview screenshot is not a Reddit playtest
 ## Submission
 
 `docs/SUBMISSION.md` is the Devpost draft and checklist. Franklyn submits; never submit or publish for him.
+
+## Known limits
+
+- The best route is computed in the client, so a technical player can read it before playing. The crowd
+  comparison is for fun and is not cheat-resistant; do not describe it as such.
+- The Redis transaction and claim logic has no automated concurrency test; it was reviewed by reading and
+  needs a real multi-player playtest.
 
 ## Not done yet
 

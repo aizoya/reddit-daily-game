@@ -65,6 +65,8 @@ type ReceiptProps = {
   subreddit: string | null;
   joined: boolean;
   onJoin: () => Promise<void>;
+  // False until Reddit approves the app (except for the owner): then only Copy is offered.
+  userActions: boolean;
 };
 
 const Row = ({ label, value }: { label: string; value: string }) => (
@@ -86,7 +88,9 @@ export const Receipt = ({
   subreddit,
   joined,
   onJoin,
+  userActions,
 }: ReceiptProps) => {
+  const canAct = shift.saved && userActions;
   const [joining, setJoining] = useState(false);
   const confirmJoin = async (): Promise<void> => {
     setJoining(true);
@@ -176,9 +180,10 @@ export const Receipt = ({
       {confirming ? (
         <div className="mt-3 rounded-2xl border border-line bg-asphalt p-3 font-sans">
           <p className="text-[13px] leading-5 text-white">
-            This posts a comment from your account
-            {username ? ` (u/${username})` : ''} with your score. Your route
-            is hidden behind a spoiler tag.
+            This posts a public comment from your Reddit account
+            {username ? ` (u/${username})` : ''}, as a reply in this post’s
+            score thread. It shows your username and score, with your route
+            hidden behind a spoiler tag. You can delete it on Reddit any time.
           </p>
           <div className="mt-3 flex gap-2">
             <button
@@ -209,7 +214,7 @@ export const Receipt = ({
           >
             {showingBest ? 'Show my route' : 'Show best route'}
           </button>
-          {shift.saved ? (
+          {canAct ? (
             <button
               type="button"
               onClick={() => setConfirming(true)}
@@ -233,7 +238,7 @@ export const Receipt = ({
         Think there was a better line? Argue your route in the comments.{' '}
         {nextCity}
       </p>
-      {shift.saved && !confirming && !joined ? (
+      {canAct && !confirming && !joined ? (
         <div className="mt-3 flex items-center gap-3 rounded-2xl border border-line bg-asphalt p-3 font-sans">
           <p className="min-w-0 flex-1 text-[12px] leading-4 text-mute">
             Want tomorrow’s city in your feed? This joins{' '}
@@ -250,7 +255,7 @@ export const Receipt = ({
           </button>
         </div>
       ) : null}
-      {shift.saved && !confirming ? (
+      {canAct && !confirming ? (
         <button
           type="button"
           onClick={onCopy}

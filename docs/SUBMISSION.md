@@ -10,6 +10,12 @@ Facts below are true as of 2026-11-15; update anything that changes before submi
 - [ ] Demo post link: a public post running the game
 - [ ] Reddit review if the "post my result" comment permission is kept
 - [ ] Optional developer survey
+- [ ] Judge access: the rules allow a private uploaded app, but judges must be able to reach a working
+      demo post. Either use a public demo subreddit or follow the rules' admin-access alternative. Confirm
+      which on the official rules page before submitting.
+- [ ] Decide when to submit the app for Reddit review. "Post my result" and Join stay hidden from everyone
+      but the app owner until a reviewed version is approved (`USER_ACTIONS_APPROVED` in
+      `src/server/core/config.ts`).
 - [ ] Check the official rules page for anything this draft misses
 
 ## Short description (one line)
@@ -29,8 +35,8 @@ eight fares and a bigger tank, and Low Tank Sunday gives you far less fuel.
 ## Why it belongs on Reddit
 
 - One city per day, shared by everyone, so the comment thread is about the same puzzle
-- A one-tap, opt-in "Post my result" comment with the route behind a spoiler tag, so people can argue
-  lines without ruining the puzzle
+- An opt-in "Post my result" reply in a stickied score thread, with the route behind a spoiler tag, so
+  people can compare lines without ruining the puzzle and the main thread stays free for discussion
 - Each post keeps its own date, so old posts stay playable
 - The feed card shows today's map before you tap, and your own route and score after you finish
 

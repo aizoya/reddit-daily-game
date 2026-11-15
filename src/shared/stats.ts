@@ -55,8 +55,11 @@ export type StreakRecord = {
 };
 
 // A streak grows when the player finishes the shift for the day after their last one.
+// Dates on or before the last counted day never move it, so archive posts cannot rewind it.
 export const nextStreak = (previous: StreakRecord, date: string): StreakRecord => {
-  if (previous.lastDate === date) return previous;
+  if (previous.lastDate !== undefined && date <= previous.lastDate) {
+    return previous;
+  }
   const continues =
     previous.lastDate !== undefined && dayAfter(previous.lastDate) === date;
   const current = continues ? previous.current + 1 : 1;
@@ -67,10 +70,13 @@ export const nextStreak = (previous: StreakRecord, date: string): StreakRecord =
   };
 };
 
-export const toStreak = (record: StreakRecord): Streak => ({
-  current: record.current,
-  best: record.best,
-});
+// What to show today: a streak is only alive if its last day was today or yesterday.
+export const toStreak = (record: StreakRecord, today: string): Streak => {
+  const alive =
+    record.lastDate !== undefined &&
+    (record.lastDate === today || dayAfter(record.lastDate) === today);
+  return { current: alive ? record.current : 0, best: record.best };
+};
 
 const toCount = (value: string | undefined): number => {
   const parsed = Number(value);

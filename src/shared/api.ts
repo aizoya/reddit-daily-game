@@ -36,6 +36,9 @@ export type InitResponse = {
   // True once the player has joined through the game. Players who joined another way
   // may still see the prompt; joining twice is harmless.
   joined: boolean;
+  // Whether this player may post a result or join through the game. Until Reddit approves
+  // the app these act as the player only for the app owner, so they stay off for everyone else.
+  userActions: boolean;
   players: number;
   shift: SavedShift | null;
 };
