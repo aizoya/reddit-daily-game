@@ -39,3 +39,30 @@ jobs:
           name: client-build
           path: dist/client
           retention-days: 3
+
+  # Publishes the built client to a throwaway preview/<branch> branch so the authoring
+  # workspace (which cannot download artifacts) can fetch it over git and screenshot it.
+  preview:
+    needs: test
+    if: github.event_name == 'push' && startsWith(github.ref_name, 'claude/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download client build
+        uses: actions/download-artifact@v4
+        with:
+          name: client-build
+          path: site
+      - name: Push preview branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: preview/${{ github.ref_name }}
+        run: |
+          cd site
+          git init -q -b "$BRANCH"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Preview build of ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$BRANCH"
