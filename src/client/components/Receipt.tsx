@@ -18,7 +18,7 @@ const CrowdChart = ({ spread, mine }: { spread: number[]; mine: number }) => {
   const tallest = Math.max(1, ...spread);
   return (
     <div
-      className="mt-2 flex items-end justify-center gap-2"
+      className="mt-3 mb-2 flex items-end justify-center gap-2"
       role="img"
       aria-label={`How drivers did today: ${spread
         .map((count, index) => `${SPREAD_LABELS[index] ?? ''} ${count}`)
