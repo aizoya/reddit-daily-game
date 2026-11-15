@@ -153,25 +153,35 @@ export const submitShift = async (
   const today = todayUtc();
   const streak = date === today ? nextStreak(previous, date) : previous;
 
+  const streakFields = {
+    lastDate: date,
+    current: String(streak.current),
+    best: String(streak.best),
+  };
   try {
     await txn.multi();
     await txn.set(key, JSON.stringify(result.completed));
     await txn.hIncrBy(histogramKey(date), String(result.earnings), 1);
-    if (streak !== previous) {
-      await txn.hSet(streakKey(userId), {
-        lastDate: date,
-        current: String(streak.current),
-        best: String(streak.best),
-      });
-    }
+    if (streak !== previous) await txn.hSet(streakKey(userId), streakFields);
     await txn.exec();
   } catch (error) {
     console.error('Shift transaction did not commit:', error);
   }
 
   // Whatever happened above, the stored shift is the truth: ours if we won, the other
-  // request's if we lost the race, nothing if the write failed outright.
-  const saved = await loadShift(date, userId);
+  // request's if we lost the race, nothing if the transaction did not commit.
+  let saved = await loadShift(date, userId);
+
+  if (saved === null && (await claim(`shiftclaim:${date}:${userId}`))) {
+    // Fallback if the transaction could not commit at all: a single-winner claim, then
+    // plain writes. Not all-or-nothing, but it can never count one player twice.
+    console.error('Falling back to claimed writes for', key);
+    await redis.set(key, JSON.stringify(result.completed));
+    await redis.hIncrBy(histogramKey(date), String(result.earnings), 1);
+    if (streak !== previous) await redis.hSet(streakKey(userId), streakFields);
+    await expireSoon(`shiftclaim:${date}:${userId}`);
+    saved = await loadShift(date, userId);
+  }
   if (saved === null) throw new Error('Shift was not saved');
 
   await Promise.all([expireSoon(key), expireSoon(streakKey(userId))]);
