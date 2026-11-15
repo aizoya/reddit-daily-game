@@ -282,3 +282,18 @@ export const formatCountdown = (minutes: number): string => {
   if (hours === 0) return `${rest}m`;
   return rest === 0 ? `${hours}h` : `${hours}h ${rest}m`;
 };
+
+// The comment a player can choose to post. The route sits behind Reddit spoiler tags
+// so the thread can argue lines without ruining the puzzle for people still playing.
+export const commentText = (puzzle: Puzzle, result: PlanResult): string => {
+  const line = shareLine(
+    puzzle.date,
+    result.earnings,
+    puzzle.best.earnings,
+    result.fuelUsed,
+    puzzle.fuel
+  );
+  if (result.completed.length === 0) return line;
+  const route = result.completed.map(fareLetter).join(' → ');
+  return `${line}\n\nMy route: >!${route}!<`;
+};

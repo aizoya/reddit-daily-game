@@ -86,7 +86,8 @@ const FareChip = ({ fare, step, cost, blocked, onPick }: FareChipProps) => {
 };
 
 export const App = () => {
-  const { date, shift, submitting, submit } = useShift();
+  const { date, shift, username, submitting, submit, postComment } =
+    useShift();
   const puzzle = useMemo(() => generatePuzzle(date), [date]);
   const [order, setOrder] = useState<number[]>([]);
   const [showingBest, setShowingBest] = useState(false);
@@ -169,6 +170,15 @@ export const App = () => {
           showingBest={showingBest}
           onToggleBest={() => setShowingBest((value) => !value)}
           onCopy={() => void copyResult()}
+          username={username}
+          onPost={async () => {
+            const ok = await postComment();
+            showToast(
+              ok
+                ? 'Posted to the comments.'
+                : 'Could not post your comment. Try again.'
+            );
+          }}
         />
       </main>
     );

@@ -13,6 +13,10 @@ http.createServer(async (req, res) => {
     res.setHeader('content-type', 'application/json');
     return res.end(JSON.stringify({ type: 'init', date, username: 'tester', players: 157, shift: null }));
   }
+  if (url.pathname === '/api/comment') {
+    res.setHeader('content-type', 'application/json');
+    return res.end(JSON.stringify({ type: 'comment', commented: true }));
+  }
   if (url.pathname === '/api/submit') {
     let body = ''; for await (const c of req) body += c;
     const order = stats.parseOrder(JSON.parse(body).order) ?? [];
@@ -20,7 +24,7 @@ http.createServer(async (req, res) => {
     const result = game.evaluatePlan(puzzle, order);
     const h = { ...hist, [String(puzzle.best.earnings)]: '19' };
     res.setHeader('content-type', 'application/json');
-    return res.end(JSON.stringify({ type: 'submit', date, shift: { result, stats: stats.computeDayStats(h, result.earnings, puzzle.best.earnings), streak: { current: 3, best: 5 }, saved: true } }));
+    return res.end(JSON.stringify({ type: 'submit', date, shift: { result, stats: stats.computeDayStats(h, result.earnings, puzzle.best.earnings), streak: { current: 3, best: 5 }, saved: true, commented: false } }));
   }
   const file = path.join(root, path.normalize(url.pathname === '/' ? '/game.html' : url.pathname));
   if (!file.startsWith(root) || !fs.existsSync(file)) { res.statusCode = 404; return res.end('nf'); }

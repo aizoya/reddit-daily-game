@@ -45,5 +45,14 @@
   },
   "dev": {
     "subreddit": "aizoya_daily_dev"
+  },
+  "permissions": {
+    "redis": true,
+    "reddit": {
+      "enable": true,
+      "asUser": [
+        "SUBMIT_COMMENT"
+      ]
+    }
   }
 }
