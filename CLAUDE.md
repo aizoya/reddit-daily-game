@@ -42,6 +42,10 @@ For `claude/*` branches CI also force-pushes the built client to `preview/<branc
 for serving and screenshotting it. A preview screenshot is not a Reddit playtest.
 `package-lock.json` is committed and CI installs with `npm ci`; update the lockfile from the Codespace, not by hand.
 
+## Submission
+
+`docs/SUBMISSION.md` is the Devpost draft and checklist. Franklyn submits; never submit or publish for him.
+
 ## Not done yet
 
 - Playtested once on Reddit (2026-11-15, private version 0.0.1.x in r/aizoya_daily_dev): post creation, play, submit, receipt and streak worked for one player. Not published.
