@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
-  FARE_COUNT,
   distance,
   evaluatePlan,
   generatePuzzle,
@@ -27,7 +26,7 @@ test('different dates produce different puzzles', () => {
 test('every hackathon-window puzzle is valid and forces a choice', () => {
   for (const date of dates) {
     const puzzle = generatePuzzle(date);
-    assert.equal(puzzle.fares.length, FARE_COUNT, date);
+    assert.equal(puzzle.fares.length, puzzle.theme.fares, date);
     const cells = [
       puzzle.start,
       ...puzzle.fares.flatMap((f) => [f.pickup, f.dropoff]),
@@ -40,7 +39,7 @@ test('every hackathon-window puzzle is valid and forces a choice', () => {
     }
     assert.ok(puzzle.best.completed.length >= 3, `${date}: too few fares`);
     assert.ok(
-      puzzle.best.completed.length <= FARE_COUNT - 2,
+      puzzle.best.completed.length <= puzzle.fares.length - 2,
       `${date}: no real choice`
     );
     assert.ok(puzzle.best.fuelUsed <= puzzle.fuel, date);
@@ -154,4 +153,26 @@ test('comment text hides the route behind spoiler tags', async () => {
   );
   const empty = m.evaluatePlan(puzzle, []);
   assert.ok(!m.commentText(puzzle, empty).includes('>!'));
+});
+
+// Posted puzzles are frozen. If this test fails, the generator changed for dates players
+// may already have played: do not update the numbers, fix the generator instead.
+test('known dates still generate the same city', async () => {
+  const m = await import('./onefare.ts');
+  const frozen: [string, string, number, number, number, string][] = [
+  ['2026-11-15', '', 7, 28, 60, '6,2,4'],
+  ['2026-11-16', 'Quiet Monday', 6, 25, 56, '2,4,6,5'],
+  ['2026-11-18', '', 7, 28, 62, '3,1,2,7'],
+  ['2026-11-20', 'Payday Friday', 7, 26, 97, '7,6,1,4,3'],
+  ['2026-11-21', 'Long Haul Saturday', 8, 32, 75, '4,3,1,7,2'],
+  ['2026-11-22', 'Low Tank Sunday', 7, 21, 44, '6,5,7'],
+  ];
+  for (const [date, theme, fares, fuel, best, route] of frozen) {
+    const puzzle = m.generatePuzzle(date);
+    assert.equal(puzzle.theme.name, theme, date);
+    assert.equal(puzzle.fares.length, fares, date);
+    assert.equal(puzzle.fuel, fuel, date);
+    assert.equal(puzzle.best.earnings, best, date);
+    assert.equal(puzzle.best.completed.join(','), route, date);
+  }
 });

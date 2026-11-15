@@ -7,6 +7,7 @@ const FARE_COLORS = [
   '#f78fb8',
   '#a4e06a',
   '#5cd9e6',
+  '#c5cede',
 ];
 
 export const fareColor = (id: number): string =>

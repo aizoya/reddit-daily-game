@@ -10,8 +10,20 @@ export type Fare = {
   payout: number;
 };
 
+// A day's flavour. Themes only change generation numbers, never the rules.
+export type Theme = {
+  // Empty for an ordinary day.
+  name: string;
+  blurb: string;
+  fares: number;
+  fuelBase: number;
+  fuelSpread: number;
+  tipSpread: number;
+};
+
 export type Puzzle = {
   date: string;
+  theme: Theme;
   width: number;
   height: number;
   start: Cell;
@@ -29,9 +41,68 @@ export type PlanResult = {
 
 export const GRID_WIDTH = 7;
 export const GRID_HEIGHT = 7;
-export const FARE_COUNT = 7;
-const BASE_FUEL = 24;
 const MAX_ATTEMPTS = 50;
+
+const STANDARD: Theme = {
+  name: '',
+  blurb: 'Seven fares. One tank.',
+  fares: 7,
+  fuelBase: 24,
+  fuelSpread: 5,
+  tipSpread: 7,
+};
+
+// The week has a rhythm: an easy start, a rich Friday, a long Saturday, a tight Sunday.
+// Indexed by UTC weekday, Sunday first.
+const WEEK: Theme[] = [
+  {
+    name: 'Low Tank Sunday',
+    blurb: 'Seven fares. Barely any fuel.',
+    fares: 7,
+    fuelBase: 19,
+    fuelSpread: 3,
+    tipSpread: 7,
+  },
+  {
+    name: 'Quiet Monday',
+    blurb: 'Six fares. Ease into the week.',
+    fares: 6,
+    fuelBase: 22,
+    fuelSpread: 4,
+    tipSpread: 7,
+  },
+  STANDARD,
+  STANDARD,
+  STANDARD,
+  {
+    name: 'Payday Friday',
+    blurb: 'Seven fares. The big tippers are out.',
+    fares: 7,
+    fuelBase: 24,
+    fuelSpread: 5,
+    tipSpread: 16,
+  },
+  {
+    name: 'Long Haul Saturday',
+    blurb: 'Eight fares. A bigger tank.',
+    fares: 8,
+    fuelBase: 30,
+    fuelSpread: 5,
+    tipSpread: 7,
+  },
+];
+
+// Puzzles are frozen once posted: a date must always generate the same city. Themes begin
+// on this date; everything earlier keeps the original generator.
+// NEVER change the numbers above for a date that has already been posted publicly. To
+// rebalance, add a new start date and a new table.
+export const THEMES_START = '2026-11-16';
+
+export const themeFor = (date: string): Theme => {
+  if (date < THEMES_START) return STANDARD;
+  const weekday = new Date(`${date}T00:00:00Z`).getUTCDay();
+  return WEEK[weekday] ?? STANDARD;
+};
 
 // Small, well-known 32-bit generators. Math.random() must never be used for puzzle content.
 const hashString = (text: string): number => {
@@ -128,6 +199,7 @@ const buildCandidate = (
   date: string,
   attempt: number
 ): Omit<Puzzle, 'best'> => {
+  const theme = themeFor(date);
   const random = mulberry32(hashString(`one-fare:${date}:${attempt}`));
   const pick = (limit: number): number => Math.floor(random() * limit);
   const taken: Cell[] = [];
@@ -144,7 +216,7 @@ const buildCandidate = (
 
   const start = freeCell();
   const fares: Fare[] = [];
-  for (let id = 1; id <= FARE_COUNT; id++) {
+  for (let id = 1; id <= theme.fares; id++) {
     const pickup = freeCell();
     let dropoff = freeCell();
     while (distance(pickup, dropoff) < 2) {
@@ -152,30 +224,31 @@ const buildCandidate = (
       dropoff = freeCell();
     }
     // Longer rides pay more, plus a tip so the best route is not just "longest rides first".
-    const payout = 3 + distance(pickup, dropoff) * 2 + pick(7);
+    const payout = 3 + distance(pickup, dropoff) * 2 + pick(theme.tipSpread);
     fares.push({ id, pickup, dropoff, payout });
   }
 
   return {
     date,
+    theme,
     width: GRID_WIDTH,
     height: GRID_HEIGHT,
     start,
-    fuel: BASE_FUEL + pick(5),
+    fuel: theme.fuelBase + pick(theme.fuelSpread),
     fares,
   };
 };
 
 // A good daily puzzle forces a real choice: the best shift completes some fares, never all.
-const isWellFormed = (best: PlanResult): boolean =>
-  best.completed.length >= 3 && best.completed.length <= FARE_COUNT - 2;
+const isWellFormed = (best: PlanResult, fareCount: number): boolean =>
+  best.completed.length >= 3 && best.completed.length <= fareCount - 2;
 
 export const generatePuzzle = (date: string): Puzzle => {
   let fallback: Puzzle | undefined;
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     const candidate = buildCandidate(date, attempt);
     const puzzle = { ...candidate, best: solve(candidate) };
-    if (isWellFormed(puzzle.best)) return puzzle;
+    if (isWellFormed(puzzle.best, candidate.fares.length)) return puzzle;
     fallback ??= puzzle;
   }
   if (fallback === undefined) throw new Error('No puzzle generated');

@@ -27,8 +27,13 @@ export const Splash = () => {
         <h1 className="text-2xl leading-none font-black tracking-tight whitespace-nowrap text-cab uppercase sm:text-3xl">
           One Fare
         </h1>
+        {puzzle.theme.name ? (
+          <p className="text-sm leading-none font-bold text-white">
+            {puzzle.theme.name}
+          </p>
+        ) : null}
         <p className="text-[13px] leading-[18px] text-white sm:text-sm sm:leading-5">
-          Seven fares. One tank. Plan the shift that earns the most.
+          {puzzle.theme.blurb} Plan the shift that earns the most.
         </p>
         <button
           type="button"

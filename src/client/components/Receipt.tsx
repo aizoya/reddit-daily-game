@@ -114,7 +114,10 @@ export const Receipt = ({
     >
       <div className="rounded-t-md bg-paper px-4 pt-3 pb-2 text-[13px] leading-6">
         <div className="flex justify-between text-[11px] tracking-widest uppercase opacity-70">
-          <span>One Fare #{puzzleNumber(puzzle.date)}</span>
+          <span>
+            One Fare #{puzzleNumber(puzzle.date)}
+            {puzzle.theme.name ? ` · ${puzzle.theme.name}` : ''}
+          </span>
           <span>{shortDate(puzzle.date)}</span>
         </div>
         <h2 className="mt-1 text-center text-xl font-bold tracking-tight">
