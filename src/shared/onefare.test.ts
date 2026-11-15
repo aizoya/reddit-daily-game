@@ -176,3 +176,21 @@ test('known dates still generate the same city', async () => {
     assert.equal(puzzle.best.completed.join(','), route, date);
   }
 });
+
+// An independent, deliberately naive search: try every ordering of every subset.
+test('the solver matches a brute-force search', async () => {
+  const m = await import('./onefare.ts');
+  for (const date of ['2026-11-15', '2026-11-16', '2026-11-20', '2026-11-21', '2026-11-22']) {
+    const puzzle = m.generatePuzzle(date);
+    const ids = puzzle.fares.map((f) => f.id);
+    let best = 0;
+    const walk = (order: number[]): void => {
+      const result = m.evaluatePlan(puzzle, order);
+      if (result.completed.length !== order.length) return;
+      best = Math.max(best, result.earnings);
+      for (const id of ids) if (!order.includes(id)) walk([...order, id]);
+    };
+    walk([]);
+    assert.equal(puzzle.best.earnings, best, date);
+  }
+});

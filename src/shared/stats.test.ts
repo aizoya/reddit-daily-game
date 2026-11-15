@@ -6,6 +6,7 @@ import {
   parseOrder,
   parseStreakRecord,
   spreadBand,
+  toStreak,
 } from './stats.ts';
 
 test('day stats from a histogram', () => {
@@ -38,6 +39,8 @@ test('streaks grow on consecutive days and reset after a gap', () => {
   const day2 = nextStreak(day1, '2026-12-01');
   assert.deepEqual(day2, { lastDate: '2026-12-01', current: 2, best: 2 });
   assert.equal(nextStreak(day2, '2026-12-01'), day2);
+  // Finishing an older post never rewinds or changes the streak.
+  assert.equal(nextStreak(day2, '2026-11-20'), day2);
   const gap = nextStreak(day2, '2026-12-04');
   assert.deepEqual(gap, { lastDate: '2026-12-04', current: 1, best: 2 });
 });
@@ -73,4 +76,15 @@ test('spread bands line up with the rating thresholds', () => {
   assert.equal(spreadBand(30, 60), 1);
   assert.equal(spreadBand(29, 60), 0);
   assert.equal(spreadBand(0, 0), 4);
+});
+
+test('a streak only shows while it is alive', () => {
+  const record = { lastDate: '2026-12-01', current: 4, best: 6 };
+  assert.deepEqual(toStreak(record, '2026-12-01'), { current: 4, best: 6 });
+  assert.deepEqual(toStreak(record, '2026-12-02'), { current: 4, best: 6 });
+  assert.deepEqual(toStreak(record, '2026-12-03'), { current: 0, best: 6 });
+  assert.deepEqual(
+    toStreak({ lastDate: undefined, current: 0, best: 0 }, '2026-12-03'),
+    { current: 0, best: 0 }
+  );
 });

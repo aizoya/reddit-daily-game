@@ -61,8 +61,8 @@ const FareChip = ({ fare, step, cost, blocked, onPick }: FareChipProps) => {
       onClick={() => onPick(fare.id)}
       aria-pressed={picked}
       aria-label={`Fare ${fareLetter(fare.id)}, pays $${fare.payout}, ${
-        picked ? `stop ${step}` : `${cost} fuel`
-      }`}
+        picked ? `stop ${step}` : `${cost} fuel from here`
+      }. Pickup at column ${fare.pickup.x + 1}, row ${fare.pickup.y + 1}. Drop-off at column ${fare.dropoff.x + 1}, row ${fare.dropoff.y + 1}.`}
       className={`flex h-12 items-center gap-1.5 rounded-xl border px-1.5 text-left transition-opacity ${
         picked ? 'border-cab bg-block' : 'border-line bg-asphalt'
       } ${blocked ? 'opacity-40' : ''}`}
@@ -92,6 +92,7 @@ export const App = () => {
     username,
     subreddit,
     joined,
+    userActions,
     submitting,
     submit,
     postComment,
@@ -187,6 +188,7 @@ export const App = () => {
           username={username}
           subreddit={subreddit}
           joined={joined}
+          userActions={userActions}
           onJoin={async () => {
             const ok = await join();
             showToast(
@@ -214,7 +216,7 @@ export const App = () => {
       <p className="min-h-16 text-[13px] leading-4 text-mute">
         {order.length === 0
           ? `${puzzle.theme.blurb} Tap fares in the order you would drive them: circle is the pickup, square is the drop-off. A fare only pays if you have the fuel to finish it.`
-          : `${order.length} ${order.length === 1 ? 'fare' : 'fares'} planned. Tap a fare again to drop it.`}
+          : `${order.length} ${order.length === 1 ? 'fare' : 'fares'} planned. Tap a fare again to drop it. You get one scored shift per city, so End shift is final.`}
       </p>
       <div className="flex min-h-0 flex-1 items-center justify-center">
         <div className="aspect-square h-full max-w-full">

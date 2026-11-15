@@ -14,12 +14,15 @@ import {
   todayUtc,
 } from '../../shared/onefare';
 import { parseOrder } from '../../shared/stats';
+import { canUseUserActions } from '../core/config';
+import { ensureScoreThread } from '../core/post';
 import {
+  claimComment,
   countPlayers,
   hasJoined,
   loadShift,
-  markCommented,
   markJoined,
+  releaseComment,
   submitShift,
 } from '../core/store';
 
@@ -44,6 +47,7 @@ api.get('/init', async (c) => {
       username: username ?? null,
       subreddit: context.subredditName ?? null,
       joined,
+      userActions: canUseUserActions(username),
       players,
       shift,
     });
@@ -81,7 +85,8 @@ api.post('/submit', async (c) => {
   }
 });
 
-// Posts the player's saved result as a comment from their own account. Only ever called
+// Posts the player's saved result from their own account, as a reply under the post's
+// stickied score thread (Reddit's required pattern for score comments). Only ever called
 // from an explicit button press, and the text is built here from the stored shift, so a
 // client cannot post arbitrary text. One comment per player per shift.
 api.post('/comment', async (c) => {
@@ -93,6 +98,12 @@ api.post('/comment', async (c) => {
         401
       );
     }
+    if (!canUseUserActions(await reddit.getCurrentUsername())) {
+      return c.json<ErrorResponse>(
+        { status: 'error', message: 'Posting results is not available yet' },
+        403
+      );
+    }
     const date = currentDate();
     const shift = await loadShift(date, userId);
     if (shift === null) {
@@ -101,13 +112,19 @@ api.post('/comment', async (c) => {
         400
       );
     }
-    if (!shift.commented) {
-      await reddit.submitComment({
-        id: postId,
-        text: commentText(generatePuzzle(date), shift.result),
-        runAs: 'USER',
-      });
-      await markCommented(date, userId);
+    // Claim first, post second: two taps can never produce two comments.
+    if (await claimComment(date, userId)) {
+      try {
+        const threadId = await ensureScoreThread(postId);
+        await reddit.submitComment({
+          id: threadId,
+          text: commentText(generatePuzzle(date), shift.result),
+          runAs: 'USER',
+        });
+      } catch (error) {
+        await releaseComment(date, userId);
+        throw error;
+      }
     }
     return c.json<CommentResponse>({ type: 'comment', commented: true });
   } catch (error) {
@@ -128,6 +145,12 @@ api.post('/join', async (c) => {
       return c.json<ErrorResponse>(
         { status: 'error', message: 'Log in to join' },
         401
+      );
+    }
+    if (!canUseUserActions(await reddit.getCurrentUsername())) {
+      return c.json<ErrorResponse>(
+        { status: 'error', message: 'Joining is not available yet' },
+        403
       );
     }
     await reddit.subscribeToCurrentSubreddit();
