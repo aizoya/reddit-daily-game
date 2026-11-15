@@ -176,9 +176,9 @@ export const App = () => {
   return (
     <main className="mx-auto flex h-full max-w-md flex-col gap-2 p-3">
       {header}
-      <p className="min-h-8 text-[13px] leading-4 text-mute">
+      <p className="min-h-12 text-[13px] leading-4 text-mute">
         {order.length === 0
-          ? 'Tap fares in the order you would drive them. A fare only pays if you have the fuel to finish it.'
+          ? 'Tap fares in the order you would drive them: circle is the pickup, square is the drop-off. A fare only pays if you have the fuel to finish it.'
           : `${order.length} ${order.length === 1 ? 'fare' : 'fares'} planned. Tap a fare again to drop it.`}
       </p>
       <div className="flex min-h-0 flex-1 items-center justify-center">
