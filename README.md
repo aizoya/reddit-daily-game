@@ -7,8 +7,9 @@ AIZOYA's entry for Reddit's Game of the Day Hackathon (Devpost, closes December 
 
 ## Status
 
-- Game rules and exact solver: written, unit-tested locally.
-- Client and server: still the stock Reddit React template.
+- Game rules, solver, stats and streak helpers: unit-tested.
+- Playable screen, result receipt and feed splash: built, checked in a headless browser against a mock backend.
+- Server (saved shifts, community stats, streaks, daily post): written and type-checked, never run on Reddit.
 - Not yet playtested on Reddit, not uploaded, not published.
 
 ## Commands

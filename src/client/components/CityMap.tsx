@@ -54,7 +54,7 @@ const FareMarks = ({ fare, step, dimmed, onPick }: FareMarksProps) => {
           strokeWidth={3}
           strokeDasharray="4 10"
           strokeLinecap="round"
-          opacity={0.55}
+          opacity={0.4}
         />
       ) : null}
       {/* Drop-off: hollow square. */}

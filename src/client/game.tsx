@@ -63,12 +63,12 @@ const FareChip = ({ fare, step, cost, blocked, onPick }: FareChipProps) => {
       aria-label={`Fare ${fareLetter(fare.id)}, pays $${fare.payout}, ${
         picked ? `stop ${step}` : `${cost} fuel`
       }`}
-      className={`flex h-12 items-center gap-2 rounded-xl border px-2 text-left transition-opacity ${
+      className={`flex h-12 items-center gap-1.5 rounded-xl border px-1.5 text-left transition-opacity ${
         picked ? 'border-cab bg-block' : 'border-line bg-asphalt'
       } ${blocked ? 'opacity-40' : ''}`}
     >
       <span
-        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-extrabold text-night"
+        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-extrabold text-night"
         style={{ backgroundColor: fareColor(fare.id) }}
       >
         {fareLetter(fare.id)}
@@ -77,7 +77,7 @@ const FareChip = ({ fare, step, cost, blocked, onPick }: FareChipProps) => {
         <span className="font-meter text-[15px] font-bold text-white">
           ${fare.payout}
         </span>
-        <span className="text-[11px] text-mute">
+        <span className="text-[11px] whitespace-nowrap text-mute">
           {picked ? `stop ${step}` : `${cost} fuel`}
         </span>
       </span>
