@@ -20,6 +20,8 @@ export type SavedShift = {
   streak: Streak;
   // False for logged-out players: the shift was scored but not stored.
   saved: boolean;
+  // True once the player has chosen to post this result as a comment.
+  commented: boolean;
 };
 
 export type InitResponse = {
@@ -43,4 +45,9 @@ export type SubmitResponse = {
 export type ErrorResponse = {
   status: 'error';
   message: string;
+};
+
+export type CommentResponse = {
+  type: 'comment';
+  commented: true;
 };

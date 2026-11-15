@@ -17,6 +17,15 @@ const shiftKey = (date: string, userId: string): string =>
   `shift:${date}:${userId}`;
 const histogramKey = (date: string): string => `hist:${date}`;
 const streakKey = (userId: string): string => `streak:${userId}`;
+const commentedKey = (date: string, userId: string): string =>
+  `commented:${date}:${userId}`;
+
+export const markCommented = async (
+  date: string,
+  userId: string
+): Promise<void> => {
+  await redis.set(commentedKey(date, userId), '1');
+};
 
 const dayStats = async (
   puzzle: Puzzle,
@@ -54,15 +63,17 @@ export const loadShift = async (
   if (order === undefined) return null;
   const puzzle = generatePuzzle(date);
   const result = evaluatePlan(puzzle, order);
-  const [stats, streakFields] = await Promise.all([
+  const [stats, streakFields, commented] = await Promise.all([
     dayStats(puzzle, result.earnings),
     redis.hGetAll(streakKey(userId)),
+    redis.get(commentedKey(date, userId)),
   ]);
   return {
     result,
     stats,
     streak: toStreak(parseStreakRecord(streakFields)),
     saved: true,
+    commented: Boolean(commented),
   };
 };
 
@@ -82,6 +93,7 @@ export const submitShift = async (
       stats: await dayStats(puzzle, result.earnings),
       streak: { current: 0, best: 0 },
       saved: false,
+      commented: false,
     };
   }
 
@@ -105,5 +117,6 @@ export const submitShift = async (
     stats: await dayStats(puzzle, result.earnings),
     streak: toStreak(streak),
     saved: true,
+    commented: false,
   };
 };

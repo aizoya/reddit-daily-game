@@ -25,7 +25,8 @@ streaks, and a reason to comment.
 - `src/client/game.tsx`: the playable screen. `components/CityMap.tsx` (SVG map), `components/Receipt.tsx` (result card), `hooks/useShift.ts` (API).
 - `src/client/splash.tsx`: the inline feed view. Keep it light.
 - `src/server/core/store.ts`: Redis (shift per user per date, earnings histogram per date, streak per user). `core/post.ts`: one post per date.
-- `src/server/routes`: `api` (init, submit), `menu`, `triggers`, `scheduler` (daily post, cron in `devvit.json`, UTC).
+- `src/server/routes`: `api` (init, submit, comment), `menu`, `triggers`, `scheduler` (daily post, cron in `devvit.json`, UTC).
+- Posting a result as a comment uses `runAs: 'USER'` (`permissions.reddit.asUser` in `devvit.json`). Reddit's rules: only from an explicit button, tell the player first, never gate play on it, keep it a separate action. Until the app is approved it posts as the player only for the app owner; everyone else posts as the app account.
 
 ## Checks
 

@@ -12,6 +12,7 @@ type ShiftState = {
   date: string;
   // 'loading' only blocks the result, never the board: the puzzle is built from the date alone.
   status: 'loading' | 'ready' | 'offline';
+  username: string | null;
   players: number;
   shift: SavedShift | null;
   submitting: boolean;
@@ -31,6 +32,7 @@ export const useShift = () => {
   const [state, setState] = useState<ShiftState>(() => ({
     date: dateFromPostData(context.postData) ?? todayUtc(),
     status: 'loading',
+    username: null,
     players: 0,
     shift: null,
     submitting: false,
@@ -49,6 +51,7 @@ export const useShift = () => {
           ...prev,
           date: data.date,
           status: 'ready',
+          username: data.username,
           players: data.players,
           shift: data.shift,
         }));
@@ -89,5 +92,26 @@ export const useShift = () => {
     }
   }, []);
 
-  return { ...state, submit };
+  // Posting is a separate, explicit choice: this only runs from the confirm button.
+  const postComment = useCallback(async (): Promise<boolean> => {
+    try {
+      const res = await fetch('/api/comment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{}',
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      setState((prev) =>
+        prev.shift === null
+          ? prev
+          : { ...prev, shift: { ...prev.shift, commented: true } }
+      );
+      return true;
+    } catch (err) {
+      console.error('Failed to post comment', err);
+      return false;
+    }
+  }, []);
+
+  return { ...state, submit, postComment };
 };

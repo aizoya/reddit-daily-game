@@ -143,3 +143,15 @@ test('countdown to the next city', async () => {
   assert.equal(m.formatCountdown(60), '1h');
   assert.equal(m.formatCountdown(7), '7m');
 });
+
+test('comment text hides the route behind spoiler tags', async () => {
+  const m = await import('./onefare.ts');
+  const puzzle = m.generatePuzzle('2026-11-15');
+  const result = m.evaluatePlan(puzzle, [1, 3]);
+  assert.equal(
+    m.commentText(puzzle, result),
+    `One Fare #1: $${result.earnings} of $${puzzle.best.earnings}, ${result.fuelUsed}/${puzzle.fuel} fuel\n\nMy route: >!A → C!<`
+  );
+  const empty = m.evaluatePlan(puzzle, []);
+  assert.ok(!m.commentText(puzzle, empty).includes('>!'));
+});

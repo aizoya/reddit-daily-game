@@ -30,6 +30,8 @@ type ReceiptProps = {
   showingBest: boolean;
   onToggleBest: () => void;
   onCopy: () => void;
+  username: string | null;
+  onPost: () => Promise<void>;
 };
 
 const Row = ({ label, value }: { label: string; value: string }) => (
@@ -46,7 +48,17 @@ export const Receipt = ({
   showingBest,
   onToggleBest,
   onCopy,
+  username,
+  onPost,
 }: ReceiptProps) => {
+  const [confirming, setConfirming] = useState(false);
+  const [posting, setPosting] = useState(false);
+  const confirmPost = async (): Promise<void> => {
+    setPosting(true);
+    await onPost();
+    setPosting(false);
+    setConfirming(false);
+  };
   const { result, stats, streak } = shift;
   const best = puzzle.best.earnings;
   const rating = rate(result.earnings, best);
@@ -113,27 +125,75 @@ export const Receipt = ({
         ) : null}
       </div>
       <div className="receipt-edge" />
-      <div className="mt-3 flex gap-2 font-sans">
-        <button
-          type="button"
-          onClick={onToggleBest}
-          aria-pressed={showingBest}
-          className="h-11 flex-1 rounded-full border border-line bg-asphalt text-sm font-semibold text-white active:bg-block"
-        >
-          {showingBest ? 'Show my route' : 'Show best route'}
-        </button>
-        <button
-          type="button"
-          onClick={onCopy}
-          className="h-11 flex-1 rounded-full bg-cab text-sm font-bold text-ink active:bg-cab-deep"
-        >
-          Copy result
-        </button>
-      </div>
+      {confirming ? (
+        <div className="mt-3 rounded-2xl border border-line bg-asphalt p-3 font-sans">
+          <p className="text-[13px] leading-5 text-white">
+            This posts a comment from your account
+            {username ? ` (u/${username})` : ''} with your score. Your route
+            is hidden behind a spoiler tag.
+          </p>
+          <div className="mt-3 flex gap-2">
+            <button
+              type="button"
+              onClick={() => setConfirming(false)}
+              disabled={posting}
+              className="h-11 flex-1 rounded-full border border-line text-sm font-semibold text-white disabled:opacity-40"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => void confirmPost()}
+              disabled={posting}
+              className="h-11 flex-1 rounded-full bg-cab text-sm font-bold text-ink active:bg-cab-deep disabled:opacity-40"
+            >
+              {posting ? 'Posting…' : 'Post comment'}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="mt-3 flex gap-2 font-sans">
+          <button
+            type="button"
+            onClick={onToggleBest}
+            aria-pressed={showingBest}
+            className="h-11 flex-1 rounded-full border border-line bg-asphalt text-sm font-semibold text-white active:bg-block"
+          >
+            {showingBest ? 'Show my route' : 'Show best route'}
+          </button>
+          {shift.saved ? (
+            <button
+              type="button"
+              onClick={() => setConfirming(true)}
+              disabled={shift.commented}
+              className="h-11 flex-1 rounded-full bg-cab text-sm font-bold text-ink active:bg-cab-deep disabled:opacity-50"
+            >
+              {shift.commented ? 'Result posted' : 'Post my result'}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={onCopy}
+              className="h-11 flex-1 rounded-full bg-cab text-sm font-bold text-ink active:bg-cab-deep"
+            >
+              Copy result
+            </button>
+          )}
+        </div>
+      )}
       <p className="mt-2 text-center font-sans text-xs text-mute">
         Think there was a better line? Argue your route in the comments.{' '}
         {nextCity}
       </p>
+      {shift.saved && !confirming ? (
+        <button
+          type="button"
+          onClick={onCopy}
+          className="mx-auto mt-1 block h-9 px-3 font-sans text-xs font-semibold text-mute underline underline-offset-2"
+        >
+          Copy result instead
+        </button>
+      ) : null}
     </section>
   );
 };
