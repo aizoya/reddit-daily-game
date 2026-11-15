@@ -7,7 +7,9 @@ updates:
       interval: "cron"
       cronjob: "0 17 * * 1,2" # At 5pm on Monday and Tuesday - https://crontab.guru/
       timezone: "America/New_York"
-    open-pull-requests-limit: 10 # Optional: prevents PR spam by limiting active updates
+    # Paused until after the hackathon deadline (2026-12-08): a surprise major upgrade
+    # is not worth the risk right now. Set back to 10 to resume.
+    open-pull-requests-limit: 0
     ignore:
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
@@ -43,3 +45,4 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 0 # paused until after 2026-12-08, see above
