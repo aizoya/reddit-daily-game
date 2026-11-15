@@ -25,7 +25,7 @@ streaks, and a reason to comment.
 - `src/client/game.tsx`: the playable screen. `components/CityMap.tsx` (SVG map), `components/Receipt.tsx` (result card), `hooks/useShift.ts` (API).
 - `src/client/splash.tsx`: the inline feed view. Keep it light.
 - `src/server/core/store.ts`: Redis (shift per user per date, earnings histogram per date, streak per user). `core/post.ts`: one post per date.
-- `src/server/routes`: `api` (init, submit, comment), `menu`, `triggers`, `scheduler` (daily post, cron in `devvit.json`, UTC).
+- `src/server/routes`: `api` (init, submit, comment, join), `menu`, `triggers`, `scheduler` (daily post, cron in `devvit.json`, UTC).
 - Posting a result as a comment uses `runAs: 'USER'` (`permissions.reddit.asUser` in `devvit.json`). Reddit's rules: only from an explicit button, tell the player first, never gate play on it, keep it a separate action. Until the app is approved it posts as the player only for the app owner; everyone else posts as the app account.
 
 ## Frozen puzzles
@@ -51,4 +51,4 @@ for serving and screenshotting it. A preview screenshot is not a Reddit playtest
 - Playtested once on Reddit (2026-11-15, private version 0.0.1.x in r/aizoya_daily_dev): post creation, play, submit, receipt and streak worked for one player. Not published.
 - Playtests run from a GitHub Codespace on this repo (`npx devvit login --copy-paste`, then `npm run dev`); the authoring workspace cannot install packages.
 - Devvit Journeys instrumentation (judges ask for it) needs the `@devvit/analytics` package.
-- Difficulty tuning, a how-to-play first-run hint on the map, sound/haptics, and a subreddit subscribe prompt on the receipt.
+- Sound/haptics. The Join button and comment posting use `asUser` permissions that Reddit reviews before publishing.

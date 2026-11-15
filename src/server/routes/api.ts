@@ -4,6 +4,7 @@ import type {
   CommentResponse,
   ErrorResponse,
   InitResponse,
+  JoinResponse,
   SubmitResponse,
 } from '../../shared/api';
 import {
@@ -15,8 +16,10 @@ import {
 import { parseOrder } from '../../shared/stats';
 import {
   countPlayers,
+  hasJoined,
   loadShift,
   markCommented,
+  markJoined,
   submitShift,
 } from '../core/store';
 
@@ -29,15 +32,18 @@ const currentDate = (): string =>
 api.get('/init', async (c) => {
   try {
     const date = currentDate();
-    const [username, shift, players] = await Promise.all([
+    const [username, shift, players, joined] = await Promise.all([
       reddit.getCurrentUsername(),
       loadShift(date, context.userId),
       countPlayers(date),
+      hasJoined(context.userId),
     ]);
     return c.json<InitResponse>({
       type: 'init',
       date,
       username: username ?? null,
+      subreddit: context.subredditName ?? null,
+      joined,
       players,
       shift,
     });
@@ -108,6 +114,29 @@ api.post('/comment', async (c) => {
     console.error('API comment error:', error);
     return c.json<ErrorResponse>(
       { status: 'error', message: 'Could not post your comment' },
+      500
+    );
+  }
+});
+
+// Joins the player to this community from their own account. Only ever called from the
+// explicit Join button on the receipt; never required to play.
+api.post('/join', async (c) => {
+  try {
+    const { userId } = context;
+    if (!userId) {
+      return c.json<ErrorResponse>(
+        { status: 'error', message: 'Log in to join' },
+        401
+      );
+    }
+    await reddit.subscribeToCurrentSubreddit();
+    await markJoined(userId);
+    return c.json<JoinResponse>({ type: 'join', joined: true });
+  } catch (error) {
+    console.error('API join error:', error);
+    return c.json<ErrorResponse>(
+      { status: 'error', message: 'Could not join the community' },
       500
     );
   }

@@ -62,6 +62,9 @@ type ReceiptProps = {
   onCopy: () => void;
   username: string | null;
   onPost: () => Promise<void>;
+  subreddit: string | null;
+  joined: boolean;
+  onJoin: () => Promise<void>;
 };
 
 const Row = ({ label, value }: { label: string; value: string }) => (
@@ -80,7 +83,16 @@ export const Receipt = ({
   onCopy,
   username,
   onPost,
+  subreddit,
+  joined,
+  onJoin,
 }: ReceiptProps) => {
+  const [joining, setJoining] = useState(false);
+  const confirmJoin = async (): Promise<void> => {
+    setJoining(true);
+    await onJoin();
+    setJoining(false);
+  };
   const [confirming, setConfirming] = useState(false);
   const [posting, setPosting] = useState(false);
   const confirmPost = async (): Promise<void> => {
@@ -221,6 +233,23 @@ export const Receipt = ({
         Think there was a better line? Argue your route in the comments.{' '}
         {nextCity}
       </p>
+      {shift.saved && !confirming && !joined ? (
+        <div className="mt-3 flex items-center gap-3 rounded-2xl border border-line bg-asphalt p-3 font-sans">
+          <p className="min-w-0 flex-1 text-[12px] leading-4 text-mute">
+            Want tomorrow’s city in your feed? This joins{' '}
+            {subreddit ? `r/${subreddit}` : 'this community'} from your
+            account.
+          </p>
+          <button
+            type="button"
+            onClick={() => void confirmJoin()}
+            disabled={joining}
+            className="h-10 shrink-0 rounded-full border border-cab px-4 text-sm font-bold text-cab disabled:opacity-40"
+          >
+            {joining ? 'Joining…' : 'Join'}
+          </button>
+        </div>
+      ) : null}
       {shift.saved && !confirming ? (
         <button
           type="button"
