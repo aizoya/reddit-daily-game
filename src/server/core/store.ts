@@ -20,6 +20,17 @@ const streakKey = (userId: string): string => `streak:${userId}`;
 const commentedKey = (date: string, userId: string): string =>
   `commented:${date}:${userId}`;
 
+const joinedKey = (userId: string): string => `joined:${userId}`;
+
+export const hasJoined = async (
+  userId: string | undefined
+): Promise<boolean> =>
+  userId ? Boolean(await redis.get(joinedKey(userId))) : false;
+
+export const markJoined = async (userId: string): Promise<void> => {
+  await redis.set(joinedKey(userId), '1');
+};
+
 export const markCommented = async (
   date: string,
   userId: string

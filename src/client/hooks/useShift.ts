@@ -13,6 +13,8 @@ type ShiftState = {
   // 'loading' only blocks the result, never the board: the puzzle is built from the date alone.
   status: 'loading' | 'ready' | 'offline';
   username: string | null;
+  subreddit: string | null;
+  joined: boolean;
   players: number;
   shift: SavedShift | null;
   submitting: boolean;
@@ -33,6 +35,8 @@ export const useShift = () => {
     date: dateFromPostData(context.postData) ?? todayUtc(),
     status: 'loading',
     username: null,
+    subreddit: null,
+    joined: false,
     players: 0,
     shift: null,
     submitting: false,
@@ -52,6 +56,8 @@ export const useShift = () => {
           date: data.date,
           status: 'ready',
           username: data.username,
+          subreddit: data.subreddit,
+          joined: data.joined,
           players: data.players,
           shift: data.shift,
         }));
@@ -113,5 +119,22 @@ export const useShift = () => {
     }
   }, []);
 
-  return { ...state, submit, postComment };
+  // Joining is its own explicit choice, separate from playing and from posting.
+  const join = useCallback(async (): Promise<boolean> => {
+    try {
+      const res = await fetch('/api/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{}',
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      setState((prev) => ({ ...prev, joined: true }));
+      return true;
+    } catch (err) {
+      console.error('Failed to join', err);
+      return false;
+    }
+  }, []);
+
+  return { ...state, submit, postComment, join };
 };

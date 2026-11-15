@@ -31,6 +31,11 @@ export type InitResponse = {
   type: 'init';
   date: string;
   username: string | null;
+  // The community this post lives in, for the join prompt.
+  subreddit: string | null;
+  // True once the player has joined through the game. Players who joined another way
+  // may still see the prompt; joining twice is harmless.
+  joined: boolean;
   players: number;
   shift: SavedShift | null;
 };
@@ -53,4 +58,9 @@ export type ErrorResponse = {
 export type CommentResponse = {
   type: 'comment';
   commented: true;
+};
+
+export type JoinResponse = {
+  type: 'join';
+  joined: true;
 };

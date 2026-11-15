@@ -86,8 +86,17 @@ const FareChip = ({ fare, step, cost, blocked, onPick }: FareChipProps) => {
 };
 
 export const App = () => {
-  const { date, shift, username, submitting, submit, postComment } =
-    useShift();
+  const {
+    date,
+    shift,
+    username,
+    subreddit,
+    joined,
+    submitting,
+    submit,
+    postComment,
+    join,
+  } = useShift();
   const puzzle = useMemo(() => generatePuzzle(date), [date]);
   const [order, setOrder] = useState<number[]>([]);
   const [showingBest, setShowingBest] = useState(false);
@@ -176,6 +185,16 @@ export const App = () => {
           onToggleBest={() => setShowingBest((value) => !value)}
           onCopy={() => void copyResult()}
           username={username}
+          subreddit={subreddit}
+          joined={joined}
+          onJoin={async () => {
+            const ok = await join();
+            showToast(
+              ok
+                ? 'Joined. Tomorrow’s city will be in your feed.'
+                : 'Could not join. Try again.'
+            );
+          }}
           onPost={async () => {
             const ok = await postComment();
             showToast(
