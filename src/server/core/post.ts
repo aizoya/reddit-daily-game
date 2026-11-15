@@ -24,9 +24,15 @@ const STICKY_TEXT =
 
 // Reddit asks for score comments to live under one stickied comment, so the main thread
 // stays free for real discussion. Returns that comment's id, creating it once per post.
-export const ensureScoreThread = async (postId: string): Promise<string> => {
+type PostId = `t3_${string}`;
+type CommentId = `t1_${string}`;
+
+const isCommentId = (value: string): value is CommentId =>
+  value.startsWith('t1_');
+
+export const ensureScoreThread = async (postId: PostId): Promise<CommentId> => {
   const existing = await redis.get(stickyKey(postId));
-  if (existing) return existing;
+  if (existing && isCommentId(existing)) return existing;
   if (!(await claim(stickyClaimKey(postId)))) {
     // Another request is creating it right now.
     throw new Error('Score thread is being created, try again');
