@@ -24,7 +24,10 @@ streaks, and a reason to comment.
 - `src/shared/*.test.ts`: unit tests, run with `npm run test:unit` (no install needed). Excluded from tsc and eslint.
 - `src/client/game.tsx`: the playable screen. `components/CityMap.tsx` (SVG map), `components/Receipt.tsx` (result card), `hooks/useShift.ts` (API).
 - `src/client/splash.tsx`: the inline feed view. Keep it light.
-- `src/server/core/store.ts`: Redis (shift per user per date, earnings histogram per date, streak per user). `core/post.ts`: one post per date.
+- `src/server/core/shiftStore.ts`: the storage rules (shift per user per date, earnings histogram per date, streak per
+  user, claims), written against small Redis-like interfaces with no runtime relative imports. `shiftStore.test.ts`
+  runs them against an in-memory Redis, including simultaneous and failing requests. `store.ts` wires them to Devvit's
+  Redis. `core/post.ts`: one post per date and its score thread.
 - `src/server/routes`: `api` (init, submit, comment, join), `menu`, `triggers`, `scheduler` (daily post, cron in `devvit.json`, UTC).
 - `src/server/core/config.ts`: `USER_ACTIONS_APPROVED` (false until Reddit approves a published version) and the owner
   username. While false, Post my result and Join are offered to the owner only; everyone else gets Copy result.
@@ -58,8 +61,10 @@ for serving and screenshotting it. A preview screenshot is not a Reddit playtest
 
 - The best route is computed in the client, so a technical player can read it before playing. The crowd
   comparison is for fun and is not cheat-resistant; do not describe it as such.
-- The Redis transaction and claim logic has no automated concurrency test; it was reviewed by reading and
-  needs a real multi-player playtest.
+- The transaction and claim logic is unit-tested against an in-memory Redis that imitates WATCH/EXEC. Devvit's real
+  Redis may behave differently on a conflict, so it still needs a real multi-player playtest.
+- If transactions are unavailable and a write fails midway through the fallback, a shift can be saved but not
+  counted in the day's histogram (an undercount of one, never a double count).
 
 ## Not done yet
 
