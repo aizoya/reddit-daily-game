@@ -6,6 +6,18 @@ const dayAfter = (date: string): string =>
   new Date(Date.parse(`${date}T00:00:00Z`) + 86400000).toISOString().slice(0, 10);
 
 // The histogram maps an earnings amount (as a string) to how many drivers earned exactly that.
+export const SPREAD_LABELS = ['<50%', '50%+', '70%+', '90%+', 'Best'];
+
+// Which band of the best possible earnings a shift falls in. Matches the rating thresholds.
+export const spreadBand = (earnings: number, bestEarnings: number): number => {
+  if (bestEarnings <= 0 || earnings >= bestEarnings) return 4;
+  const share = earnings / bestEarnings;
+  if (share >= 0.9) return 3;
+  if (share >= 0.7) return 2;
+  if (share >= 0.5) return 1;
+  return 0;
+};
+
 export const computeDayStats = (
   histogram: Record<string, string>,
   earnings: number,
@@ -14,6 +26,7 @@ export const computeDayStats = (
   let players = 0;
   let below = 0;
   let perfect = 0;
+  const spread = [0, 0, 0, 0, 0];
   for (const [amount, raw] of Object.entries(histogram)) {
     const value = Number(amount);
     const count = Number(raw);
@@ -23,12 +36,15 @@ export const computeDayStats = (
     players += count;
     if (value < earnings) below += count;
     if (value >= bestEarnings) perfect += count;
+    const band = spreadBand(value, bestEarnings);
+    spread[band] = (spread[band] ?? 0) + count;
   }
-  if (players === 0) return { players: 0, beat: 0, perfect: 0 };
+  if (players === 0) return { players: 0, beat: 0, perfect: 0, spread };
   return {
     players,
     beat: Math.round((below / players) * 100),
     perfect: Math.round((perfect / players) * 100),
+    spread,
   };
 };
 

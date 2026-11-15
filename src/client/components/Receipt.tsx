@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { SavedShift } from '../../shared/api';
 import type { Puzzle } from '../../shared/onefare';
+import { SPREAD_LABELS, spreadBand } from '../../shared/stats';
 import {
   RATING_LABEL,
   fareLetter,
@@ -11,6 +12,35 @@ import {
   shortDate,
   todayUtc,
 } from '../../shared/onefare';
+
+// How today's drivers are spread across the earnings bands, with the player's band inked in.
+const CrowdChart = ({ spread, mine }: { spread: number[]; mine: number }) => {
+  const tallest = Math.max(1, ...spread);
+  return (
+    <div
+      className="mt-3 mb-2 flex items-end justify-center gap-2"
+      role="img"
+      aria-label={`How drivers did today: ${spread
+        .map((count, index) => `${SPREAD_LABELS[index] ?? ''} ${count}`)
+        .join(', ')}`}
+    >
+      {spread.map((count, index) => (
+        <div key={index} className="flex w-11 flex-col items-center gap-1">
+          <span className="text-[10px] leading-none opacity-70">{count}</span>
+          <span
+            className={`w-full rounded-t-sm ${index === mine ? 'bg-ink' : 'bg-ink/25'}`}
+            style={{ height: `${4 + Math.round((count / tallest) * 34)}px` }}
+          />
+          <span
+            className={`text-[10px] leading-none ${index === mine ? 'font-bold' : 'opacity-70'}`}
+          >
+            {index === mine ? 'You' : SPREAD_LABELS[index]}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 // Re-reads the clock once a minute so the countdown stays honest without a busy timer.
 const useNextCity = (date: string): string => {
@@ -112,6 +142,9 @@ export const Receipt = ({
           {left > 0 ? `$${left} left on the street. ` : ''}
           {crowd}
         </p>
+        {stats.players >= 3 ? (
+          <CrowdChart spread={stats.spread} mine={spreadBand(result.earnings, best)} />
+        ) : null}
         {shift.saved && streak.current > 0 ? (
           <p className="text-center text-[12px] leading-5">
             Streak: {streak.current} {streak.current === 1 ? 'day' : 'days'}

@@ -7,6 +7,9 @@ export type DayStats = {
   beat: number;
   // Share (0-100) of finished drivers who matched the best possible shift.
   perfect: number;
+  // How many drivers landed in each band of the best possible earnings:
+  // under 50%, 50-69%, 70-89%, 90-99%, and 100%.
+  spread: number[];
 };
 
 export type Streak = {

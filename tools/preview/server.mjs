@@ -23,6 +23,7 @@ http.createServer(async (req, res) => {
     const puzzle = game.generatePuzzle(date);
     const result = game.evaluatePlan(puzzle, order);
     const h = { ...hist, [String(puzzle.best.earnings)]: '19' };
+    h[String(result.earnings)] = String(Number(h[String(result.earnings)] ?? 0) + 1);
     res.setHeader('content-type', 'application/json');
     return res.end(JSON.stringify({ type: 'submit', date, shift: { result, stats: stats.computeDayStats(h, result.earnings, puzzle.best.earnings), streak: { current: 3, best: 5 }, saved: true, commented: false } }));
   }
