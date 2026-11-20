@@ -19,14 +19,14 @@ Draft text for Devpost. The draft project on Devpost now holds this content; Fra
 | Play on 0.0.3 | Franklyn played Nov 20 (#6, Payday Friday): plan, End shift, receipt, Post my result, "Result posted". No Join button shown. | Screen recording and screenshots, 2026-11-20 |
 | Daily posts | Scheduler created posts on its own; #6 exists for Nov 20 | Server log 2026-11-16; Nov 20 recording |
 | More than one player | Receipt for Nov 20 says "2 drivers", so a second shift was saved that day. Who played is unknown. Crowd chart (3+ players) not yet seen. | Nov 20 receipt |
-| Logged-out access, member count | **Not verified.** Claude cannot reach reddit.com. | Franklyn to check |
+| Logged-out access | Desktop Chrome, logged out: r/Onefare opens, shows Public, and today's post loads the playable map. Saving while logged out not tested. | Franklyn's photos, 2026-11-20 |
+| Community size | 28 weekly visitors, 9 weekly contributions. Member count not shown on that page. | Same photos |
 | README for judges | Done, in the repo root | `README.md` |
 
 ## What Franklyn must do personally
 
-1. **Check logged-out access.** Open r/Onefare and https://developers.reddit.com/apps/aizoya-daily in a
-   private window. Earlier, logged-out mobile web users saw "Unreviewed Content" on r/Onefare.
-2. **Check r/Onefare has fewer than 200 members**, and keep it under 200 until judging ends Dec 16.
+1. **Check the app page** https://developers.reddit.com/apps/aizoya-daily opens while logged out.
+2. **Check r/Onefare has fewer than 200 members** (Mod Tools or the app shows the count), and keep it under 200 until judging ends Dec 16.
 3. **Get two or three people on other Reddit accounts to play** on the same day, then open the r/Onefare
    mod menu and tap **One Fare: drivers per day**. Three or more players makes the crowd chart appear.
 4. **On submission day, swap the test link** on Devpost from the subreddit to that day's post.
