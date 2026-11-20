@@ -1,35 +1,36 @@
 # Devpost submission draft: One Fare
 
-Draft only. Franklyn reviews, edits and submits. Nothing here has been entered on Devpost.
+Draft text for Devpost. The draft project on Devpost now holds this content; Franklyn submits.
 
 - Hackathon: Reddit's Game of the Day Hackathon, https://redditgameofday2026.devpost.com/
 - Submission deadline: Tuesday, December 8, 2026, 6:00 pm Pacific
 - Judging: December 9 to December 16, 2026. The app must keep running and posting through December 16.
 - Checked against the official rules page on 2026-11-20.
 
-## Status as of 2026-11-20
+## Status as of 2026-11-20 (11:25 Pacific)
 
 | Item | State | Evidence |
 |---|---|---|
-| Devpost registration | **Not registered.** The hackathon page shows "Join hackathon"; My projects redirects to the registration form. No draft exists. | Seen in Franklyn's signed-in Chrome, 2026-11-20 |
-| App uploaded | Private version 0.0.2, built from `main` at `d788e25` | Codespace terminal, 2026-11-15 |
-| Public demo subreddit | r/Onefare, public, version 0.0.2 installed | Install output 2026-11-15; Franklyn played there |
-| Daily posts | Scheduler created the Nov 16 post on its own; Franklyn reports posts for Nov 17 and 18 | Server log 2026-11-16; Franklyn, 2026-11-18 |
-| Non-owner play | **Not verified.** No screenshot or count from another account yet | Use the "One Fare: drivers per day" mod menu once uploaded |
+| Devpost registration | Registered. Draft project "One Fare" (submission 1313619), **Submitted** 2026-11-20 by Franklyn (Devpost shows SUBMITTED, 5/5). Editable until the deadline. | Devpost in Franklyn's Chrome, 2026-11-20 |
+| Devpost content | Name, pitch, story, 8 built-with tags, 3 try-it links, thumbnail, 5 captioned gallery images, video link, additional info. All re-read after saving. | Devpost edit pages, 2026-11-20 |
+| Demo video | 35 s, public on the AIZOYA channel: https://www.youtube.com/watch?v=_WtP80zleRc | Cut from Franklyn's screen recording of Nov 20 |
+| App uploaded | Private version 0.0.3, built from `main` at `fd75ea7` (PR #23); 30/30 unit tests and build passed first | Codespace terminal, 2026-11-20 |
+| Public demo subreddit | r/Onefare, version 0.0.3 installed | Install output 2026-11-20 |
+| Play on 0.0.3 | Franklyn played Nov 20 (#6, Payday Friday): plan, End shift, receipt, Post my result, "Result posted". No Join button shown. | Screen recording and screenshots, 2026-11-20 |
+| Daily posts | Scheduler created posts on its own; #6 exists for Nov 20 | Server log 2026-11-16; Nov 20 recording |
+| More than one player | Receipt for Nov 20 says "2 drivers", so a second shift was saved that day. Who played is unknown. Crowd chart (3+ players) not yet seen. | Nov 20 receipt |
+| Logged-out access | Desktop Chrome, logged out: r/Onefare opens, shows Public, and today's post loads the playable map. Saving while logged out not tested. | Franklyn's photos, 2026-11-20 |
+| Community size | 28 weekly visitors, 9 weekly contributions. Member count not shown on that page. | Same photos |
 | README for judges | Done, in the repo root | `README.md` |
-| Demo video | Not recorded | Optional, under 60 seconds |
 
 ## What Franklyn must do personally
 
-1. **Register on Devpost.** On the hackathon page, Join hackathon, Reddit username `AIZOYA`, tick the two
-   agreement boxes. This accepts the official rules, so only you can do it.
-2. **Approve the next upload.** I will upload the current `main` as a new private version and update
-   r/Onefare once you say yes. Nothing is published.
-3. **Get two or three people on other Reddit accounts to play** in r/Onefare, logged in. Then open the
-   r/Onefare mod menu and tap **One Fare: drivers per day**. More than one driver on a day proves
-   multiplayer saving works.
-4. **Record the demo video** on your phone (outline below), upload it publicly to YouTube, and paste the link.
-5. **Create the Devpost project and submit** with the text below. Check every link opens while logged out.
+1. **Check the app page** https://developers.reddit.com/apps/aizoya-daily opens while logged out.
+2. **Check r/Onefare has fewer than 200 members** (Mod Tools or the app shows the count), and keep it under 200 until judging ends Dec 16.
+3. **Get two or three people on other Reddit accounts to play** on the same day, then open the r/Onefare
+   mod menu and tap **One Fare: drivers per day**. Three or more players makes the crowd chart appear.
+4. **On submission day, swap the test link** on Devpost from the subreddit to that day's post.
+5. **Done 2026-11-20:** submitted on Devpost. Devpost's reminder asks to link judges to one example game post, so swap the test link before Dec 8.
 6. **Optional:** the developer satisfaction survey for the $200 feedback prize.
 
 ## Links for the form
@@ -39,7 +40,7 @@ Draft only. Franklyn reviews, edits and submits. Nothing here has been entered o
 - Demo post: link to the most recent One Fare post in r/Onefare on submission day (open it, then copy the
   link). Pick a weekday post with at least a few scores in its thread.
 - Public repository: https://github.com/aizoya/reddit-daily-game
-- Video: add after uploading
+- Video: https://www.youtube.com/watch?v=_WtP80zleRc
 
 The rules ask for a public subreddit with fewer than 200 members, or the dr-admin-approve app installed.
 r/Onefare is public; keep it under 200 members until judging ends.

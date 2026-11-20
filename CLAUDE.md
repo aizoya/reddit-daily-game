@@ -70,9 +70,12 @@ for serving and screenshotting it. A preview screenshot is not a Reddit playtest
 
 ## Not done yet
 
-- Playtested on Reddit by the owner only (2026-11-15/16): automatic daily post, themes, play, save, receipt, streak of 2,
-  stickied score thread and owner comment all worked. r/Onefare (public) runs private version 0.0.2. Not published.
-- Not yet verified: any non-owner player; more than one player on a day.
+- Playtested on Reddit by the owner (2026-11-15/16 and 2026-11-20): automatic daily post, themes, play, save, receipt,
+  streak, stickied score thread and owner comment all worked. r/Onefare (public) runs private version 0.0.3 (`fd75ea7`).
+  Not published. On 2026-11-20 the receipt counted 2 drivers; the second player is unknown.
+- Not yet verified: a named non-owner player; three or more players on a day (crowd chart); logged-out access to
+  r/Onefare and the app page; r/Onefare member count (must stay under 200 through judging).
+- Devpost submission 1313619 was submitted by Franklyn on 2026-11-20. It stays editable until the deadline. The test link should point to one game post.
 - Playtests run from a GitHub Codespace on this repo (`npx devvit login --copy-paste`, then `npm run dev`); the authoring workspace cannot install packages.
 - Devvit Journeys instrumentation (judges ask for it) needs the `@devvit/analytics` package.
 - Sound/haptics. The Join button and comment posting use `asUser` permissions that Reddit reviews before publishing.
