@@ -1,64 +1,134 @@
 # Devpost submission draft: One Fare
 
-Draft only. Franklyn reviews, edits and submits. Deadline: December 8, 2026, 6:00pm PST.
-Facts below are true as of 2026-11-15; update anything that changes before submitting.
+Draft only. Franklyn reviews, edits and submits. Nothing here has been entered on Devpost.
 
-## Still needed before submitting
+- Hackathon: Reddit's Game of the Day Hackathon, https://redditgameofday2026.devpost.com/
+- Submission deadline: Tuesday, December 8, 2026, 6:00 pm Pacific
+- Judging: December 9 to December 16, 2026. The app must keep running and posting through December 16.
+- Checked against the official rules page on 2026-11-20.
 
-- [ ] A public subreddit for the game, with the app installed and at least a few daily posts
-- [ ] App listing link from developers.reddit.com (requires `devvit upload`; the app may stay private)
-- [ ] Demo post link: a public post running the game
-- [ ] Reddit review if the "post my result" comment permission is kept
-- [ ] Optional developer survey
-- [ ] Judge access: the rules allow a private uploaded app, but judges must be able to reach a working
-      demo post. Either use a public demo subreddit or follow the rules' admin-access alternative. Confirm
-      which on the official rules page before submitting.
-- [ ] Decide when to submit the app for Reddit review. "Post my result" and Join stay hidden from everyone
-      but the app owner until a reviewed version is approved (`USER_ACTIONS_APPROVED` in
-      `src/server/core/config.ts`).
-- [ ] Check the official rules page for anything this draft misses
+## Status as of 2026-11-20
 
-## Short description (one line)
+| Item | State | Evidence |
+|---|---|---|
+| Devpost registration | **Not registered.** The hackathon page shows "Join hackathon"; My projects redirects to the registration form. No draft exists. | Seen in Franklyn's signed-in Chrome, 2026-11-20 |
+| App uploaded | Private version 0.0.2, built from `main` at `d788e25` | Codespace terminal, 2026-11-15 |
+| Public demo subreddit | r/Onefare, public, version 0.0.2 installed | Install output 2026-11-15; Franklyn played there |
+| Daily posts | Scheduler created the Nov 16 post on its own; Franklyn reports posts for Nov 17 and 18 | Server log 2026-11-16; Franklyn, 2026-11-18 |
+| Non-owner play | **Not verified.** No screenshot or count from another account yet | Use the "One Fare: drivers per day" mod menu once uploaded |
+| README for judges | Done, in the repo root | `README.md` |
+| Demo video | Not recorded | Optional, under 60 seconds |
 
-A daily rideshare route puzzle: seven fares, one tank of fuel, one best shift. Everyone gets the same city.
+## What Franklyn must do personally
 
-## What it does
+1. **Register on Devpost.** On the hackathon page, Join hackathon, Reddit username `AIZOYA`, tick the two
+   agreement boxes. This accepts the official rules, so only you can do it.
+2. **Approve the next upload.** I will upload the current `main` as a new private version and update
+   r/Onefare once you say yes. Nothing is published.
+3. **Get two or three people on other Reddit accounts to play** in r/Onefare, logged in. Then open the
+   r/Onefare mod menu and tap **One Fare: drivers per day**. More than one driver on a day proves
+   multiplayer saving works.
+4. **Record the demo video** on your phone (outline below), upload it publicly to YouTube, and paste the link.
+5. **Create the Devpost project and submit** with the text below. Check every link opens while logged out.
+6. **Optional:** the developer satisfaction survey for the $200 feedback prize.
 
-Every day One Fare posts a new city. You are a driver with one tank of fuel and more ride requests than
-you can take. Tap fares in the order you would drive them; each fare only pays if you can finish the
-drop-off. When you end the shift you get a receipt: what you earned, the best possible shift, how you
-compare with everyone else who drove that city, and your streak.
+## Links for the form
 
-The week has a rhythm. Quiet Monday has six fares, Payday Friday has big tippers, Long Haul Saturday has
-eight fares and a bigger tank, and Low Tank Sunday gives you far less fuel.
+- App listing: https://developers.reddit.com/apps/aizoya-daily
+- Test subreddit: https://www.reddit.com/r/Onefare/
+- Demo post: link to the most recent One Fare post in r/Onefare on submission day (open it, then copy the
+  link). Pick a weekday post with at least a few scores in its thread.
+- Public repository: https://github.com/aizoya/reddit-daily-game
+- Video: add after uploading
 
-## Why it belongs on Reddit
+The rules ask for a public subreddit with fewer than 200 members, or the dr-admin-approve app installed.
+r/Onefare is public; keep it under 200 members until judging ends.
 
-- One city per day, shared by everyone, so the comment thread is about the same puzzle
-- An opt-in "Post my result" reply in a stickied score thread, with the route behind a spoiler tag, so
-  people can compare lines without ruining the puzzle and the main thread stays free for discussion
-- Each post keeps its own date, so old posts stay playable
-- The feed card shows today's map before you tap, and your own route and score after you finish
+## Project name
 
-## How it maps to the judging criteria
+One Fare
 
-- **Delightful UX:** playable in seconds from the feed card; one hint line; the cab drives your route when
-  the shift ends
-- **Polish:** mobile-first layout checked at phone sizes; server re-scores every shift; reduced-motion respected
-- **Reddit-y:** shared daily city, spoiler-tagged routes in comments, community comparison on the receipt
-- **Daily content:** a new generated city every day, a weekly rhythm of themes, streaks, countdown to the next city
+## Elevator pitch (under 200 characters)
 
-## How it was built
+A daily rideshare route puzzle on Reddit. Everyone gets the same city: a handful of fares, one tank of
+fuel. Plan the shift that earns the most, then compare routes.
 
-Devvit Web with React, TypeScript, Tailwind and Hono. The puzzle generator, scoring and an exact solver are
-pure TypeScript shared by client and server, with unit tests. Redis stores each player's shift, a per-day
-earnings histogram and streaks. A scheduled task posts the new city once a day.
+## About the project
 
-## Demo video outline (about 60 seconds)
+### Inspiration
 
-1. Feed: the post card with today's map and theme (5s)
-2. Tap Start shift, plan three or four fares, show the fuel gauge emptying and a fare being refused (20s)
-3. End shift: cab drives the route, receipt prints (10s)
+Every driver on a shift faces the same question: which rides are worth the gas? We turned that into a
+puzzle that takes a minute to play and gives everyone in a community the same city on the same day, so
+the comments are about one shared problem.
+
+### What it does
+
+Every day One Fare posts a new city to its subreddit. You get a handful of ride requests and one tank of
+fuel. Tap the fares in the order you would drive them; a fare only pays if you can finish the drop-off.
+When you end the shift the cab drives your route and a receipt prints: what you earned, the best possible
+shift for that city, how you compare with every other driver, and your streak.
+
+- **A weekly rhythm.** Quiet Monday has six fares, Payday Friday has big tippers, Long Haul Saturday has
+  eight fares and a bigger tank, and Low Tank Sunday gives you far less fuel.
+- **One scored shift per city.** Everyone gets one attempt, so results are comparable.
+- **The best route is revealed after you play,** and you can flip between yours and the best one.
+- **A score thread.** Each post gets one stickied comment from the app; results go underneath it with the
+  route hidden behind a spoiler tag, so the main thread stays free for route arguments.
+- **The feed card changes after you play,** showing your route, score and streak right in the feed.
+- **Old posts stay playable,** because each post carries its own date.
+
+### How we built it
+
+Devvit Web with React, TypeScript, Tailwind and Hono. The city generator, scoring and an exact solver are
+pure TypeScript shared by client and server. Each date seeds the generator, so a city never changes once
+posted, and a regression test pins known dates. The server re-scores every shift instead of trusting the
+client. Redis stores each player's shift, an anonymous per-day earnings histogram and streaks; a shift,
+its count and the streak are saved in one transaction so a double tap can never count a player twice. A
+scheduled task posts the new city shortly after midnight UTC.
+
+*(Franklyn: add a line here about AI assistance if you want to disclose it, for example "Built with
+Claude Code as a coding partner.")*
+
+### Challenges we ran into
+
+- Making a puzzle that is not solved by an obvious rule. Across generated days, picking the best pay per
+  fuel finds the best shift only on a minority of days, so most cities need real planning.
+- Saving results safely when a player taps twice or two requests race, tested against an in-memory Redis.
+- Following Reddit's rules for acting on a player's behalf: score comments go under a stickied thread,
+  every action is explicit and optional, and those buttons stay off until the app is reviewed.
+
+### Accomplishments that we're proud of
+
+- A full daily loop running on Reddit: automatic posts, saved shifts, community comparison and streaks
+- A city that is fixed forever once posted, and a receipt that reads well on a phone
+
+### What we learned
+
+Daily games live or die on the first ten seconds and on whether there is a reason to talk afterwards.
+
+### What's next for One Fare
+
+Rush hours and one-way streets as new day types, weekly recaps of the cleverest routes, and turning on
+one-tap score posting and joining once the app passes Reddit review.
+
+## Testing instructions for judges
+
+1. Open r/Onefare and tap the newest One Fare post. Older posts are playable too.
+2. Tap **Start shift**. Circles are pickups, squares with the same letter are drop-offs.
+3. Tap fares in the order you would drive them, watching the fuel gauge, then tap **End shift**.
+4. Each Reddit account gets one scored shift per city. To play again, open an older post.
+5. "Post my result" is limited to the app owner until Reddit reviews the app; other players get
+   **Copy result** and can paste it in the comments.
+
+## Built with
+
+devvit, reddit, react, typescript, tailwindcss, hono, vite, redis
+
+## Demo video outline (under 60 seconds, record on a phone in the Reddit app)
+
+1. The feed card with today's map and theme (5s)
+2. Start shift, plan three or four fares, show the fuel gauge emptying and a fare being refused (20s)
+3. End shift: the cab drives the route and the receipt prints (10s)
 4. Show best route (5s)
-5. Post my result, then the comment thread with spoiler-tagged routes (10s)
-6. Next day's post with a different theme and the streak at 2 (10s)
+5. The score thread under the post (10s)
+6. A different weekday post showing another theme (10s)

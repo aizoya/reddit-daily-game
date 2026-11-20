@@ -25,6 +25,13 @@
         "location": "subreddit",
         "forUserType": "moderator",
         "endpoint": "/internal/menu/post-create"
+      },
+      {
+        "label": "One Fare: drivers per day",
+        "description": "Shows how many players finished each of the last seven cities",
+        "location": "subreddit",
+        "forUserType": "moderator",
+        "endpoint": "/internal/menu/player-counts"
       }
     ]
   },

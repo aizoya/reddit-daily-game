@@ -16,6 +16,7 @@ type ShiftState = {
   subreddit: string | null;
   joined: boolean;
   userActions: boolean;
+  canJoin: boolean;
   players: number;
   shift: SavedShift | null;
   submitting: boolean;
@@ -39,6 +40,7 @@ export const useShift = () => {
     subreddit: null,
     joined: false,
     userActions: false,
+    canJoin: false,
     players: 0,
     shift: null,
     submitting: false,
@@ -61,6 +63,7 @@ export const useShift = () => {
           subreddit: data.subreddit,
           joined: data.joined,
           userActions: data.userActions,
+          canJoin: data.canJoin,
           players: Math.max(prev.players, data.players),
           // A slow first load must never wipe a shift the player has just finished.
           shift: prev.shift ?? data.shift,

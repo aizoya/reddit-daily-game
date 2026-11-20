@@ -7,6 +7,10 @@ export const USER_ACTIONS_APPROVED = false;
 // The app owner's Reddit username, who can exercise user actions before approval.
 export const OWNER_USERNAME = 'AIZOYA';
 
+// Joining is stricter: Reddit refused SUBSCRIBE_TO_SUBREDDIT even for the owner on an unapproved
+// version (seen in r/Onefare logs on 2026-11-15), so Join stays hidden until approval.
+export const canJoinAsUser = (): boolean => USER_ACTIONS_APPROVED;
+
 export const canUseUserActions = (username: string | undefined): boolean =>
   USER_ACTIONS_APPROVED ||
   (username !== undefined &&
