@@ -11,7 +11,7 @@ Draft text for Devpost. The draft project on Devpost now holds this content; Fra
 
 | Item | State | Evidence |
 |---|---|---|
-| Devpost registration | Registered. Draft project "One Fare" (submission 1313619), 4 of 5 steps saved. **Not submitted.** | Devpost in Franklyn's Chrome, 2026-11-20 |
+| Devpost registration | Registered. Draft project "One Fare" (submission 1313619), **Submitted** 2026-11-20 by Franklyn (Devpost shows SUBMITTED, 5/5). Editable until the deadline. | Devpost in Franklyn's Chrome, 2026-11-20 |
 | Devpost content | Name, pitch, story, 8 built-with tags, 3 try-it links, thumbnail, 5 captioned gallery images, video link, additional info. All re-read after saving. | Devpost edit pages, 2026-11-20 |
 | Demo video | 35 s, public on the AIZOYA channel: https://www.youtube.com/watch?v=_WtP80zleRc | Cut from Franklyn's screen recording of Nov 20 |
 | App uploaded | Private version 0.0.3, built from `main` at `fd75ea7` (PR #23); 30/30 unit tests and build passed first | Codespace terminal, 2026-11-20 |
@@ -30,8 +30,7 @@ Draft text for Devpost. The draft project on Devpost now holds this content; Fra
 3. **Get two or three people on other Reddit accounts to play** on the same day, then open the r/Onefare
    mod menu and tap **One Fare: drivers per day**. Three or more players makes the crowd chart appear.
 4. **On submission day, swap the test link** on Devpost from the subreddit to that day's post.
-5. **Submit on Devpost:** Submit step, tick the terms box, press Submit project, before Dec 8, 6:00 pm Pacific.
-   The project stays editable until the deadline.
+5. **Done 2026-11-20:** submitted on Devpost. Devpost's reminder asks to link judges to one example game post, so swap the test link before Dec 8.
 6. **Optional:** the developer satisfaction survey for the $200 feedback prize.
 
 ## Links for the form
