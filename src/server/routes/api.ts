@@ -14,7 +14,7 @@ import {
   todayUtc,
 } from '../../shared/onefare';
 import { parseOrder } from '../../shared/stats';
-import { canUseUserActions } from '../core/config';
+import { canJoinAsUser, canUseUserActions } from '../core/config';
 import { ensureScoreThread } from '../core/post';
 import {
   claimComment,
@@ -48,6 +48,7 @@ api.get('/init', async (c) => {
       subreddit: context.subredditName ?? null,
       joined,
       userActions: canUseUserActions(username),
+      canJoin: canJoinAsUser(),
       players,
       shift,
     });
@@ -147,7 +148,7 @@ api.post('/join', async (c) => {
         401
       );
     }
-    if (!canUseUserActions(await reddit.getCurrentUsername())) {
+    if (!canJoinAsUser()) {
       return c.json<ErrorResponse>(
         { status: 'error', message: 'Joining is not available yet' },
         403

@@ -17,7 +17,7 @@ http.createServer(async (req, res) => {
       const result = game.evaluatePlan(puzzle, puzzle.best.completed.slice(0, 2));
       shift = { result, stats: stats.computeDayStats(hist, result.earnings, puzzle.best.earnings), streak: { current: 3, best: 5 }, saved: true, commented: false };
     }
-    return res.end(JSON.stringify({ type: 'init', date, username: 'tester', subreddit: 'onefare', joined: false, userActions: process.argv[6] !== 'noactions', players: 157, shift }));
+    return res.end(JSON.stringify({ type: 'init', date, username: 'tester', subreddit: 'onefare', joined: false, userActions: process.argv[6] !== 'noactions', canJoin: false, players: 157, shift }));
   }
   if (url.pathname === '/api/join') {
     res.setHeader('content-type', 'application/json');

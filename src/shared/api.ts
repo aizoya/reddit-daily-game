@@ -39,6 +39,8 @@ export type InitResponse = {
   // Whether this player may post a result or join through the game. Until Reddit approves
   // the app these act as the player only for the app owner, so they stay off for everyone else.
   userActions: boolean;
+  // Whether the Join button may be offered at all (false until Reddit approves the app).
+  canJoin: boolean;
   players: number;
   shift: SavedShift | null;
 };

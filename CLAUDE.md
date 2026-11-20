@@ -30,7 +30,9 @@ streaks, and a reason to comment.
   Redis. `core/post.ts`: one post per date and its score thread.
 - `src/server/routes`: `api` (init, submit, comment, join), `menu`, `triggers`, `scheduler` (daily post, cron in `devvit.json`, UTC).
 - `src/server/core/config.ts`: `USER_ACTIONS_APPROVED` (false until Reddit approves a published version) and the owner
-  username. While false, Post my result and Join are offered to the owner only; everyone else gets Copy result.
+  username. While false, Post my result is offered to the owner only; everyone else gets Copy result. Join is hidden
+  for everyone, owner included, because Reddit refuses SUBSCRIBE_TO_SUBREDDIT on an unapproved version.
+- Moderator menu: "Post today's One Fare" and "One Fare: drivers per day" (anonymous per-day counts, last 7 days).
 - User actions (`permissions.reddit.asUser` in `devvit.json`) follow Reddit's rules: explicit button, tell the player
   exactly what will appear and under which account, never gate play, keep each action separate. Score comments are
   posted as the player (`runAs: 'USER'`) as replies to one stickied app comment per post (`ensureScoreThread`).
@@ -68,7 +70,9 @@ for serving and screenshotting it. A preview screenshot is not a Reddit playtest
 
 ## Not done yet
 
-- Playtested once on Reddit (2026-11-15, private version 0.0.1.x in r/aizoya_daily_dev): post creation, play, submit, receipt and streak worked for one player. Not published.
+- Playtested on Reddit by the owner only (2026-11-15/16): automatic daily post, themes, play, save, receipt, streak of 2,
+  stickied score thread and owner comment all worked. r/Onefare (public) runs private version 0.0.2. Not published.
+- Not yet verified: any non-owner player; more than one player on a day.
 - Playtests run from a GitHub Codespace on this repo (`npx devvit login --copy-paste`, then `npm run dev`); the authoring workspace cannot install packages.
 - Devvit Journeys instrumentation (judges ask for it) needs the `@devvit/analytics` package.
 - Sound/haptics. The Join button and comment posting use `asUser` permissions that Reddit reviews before publishing.

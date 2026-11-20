@@ -93,6 +93,7 @@ export const App = () => {
     subreddit,
     joined,
     userActions,
+    canJoin,
     submitting,
     submit,
     postComment,
@@ -189,6 +190,7 @@ export const App = () => {
           subreddit={subreddit}
           joined={joined}
           userActions={userActions}
+          canJoin={canJoin}
           onJoin={async () => {
             const ok = await join();
             showToast(

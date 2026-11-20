@@ -67,6 +67,7 @@ type ReceiptProps = {
   onJoin: () => Promise<void>;
   // False until Reddit approves the app (except for the owner): then only Copy is offered.
   userActions: boolean;
+  canJoin: boolean;
 };
 
 const Row = ({ label, value }: { label: string; value: string }) => (
@@ -89,6 +90,7 @@ export const Receipt = ({
   joined,
   onJoin,
   userActions,
+  canJoin,
 }: ReceiptProps) => {
   const canAct = shift.saved && userActions;
   const [joining, setJoining] = useState(false);
@@ -238,7 +240,7 @@ export const Receipt = ({
         Think there was a better line? Argue your route in the comments.{' '}
         {nextCity}
       </p>
-      {canAct && !confirming && !joined ? (
+      {canAct && canJoin && !confirming && !joined ? (
         <div className="mt-3 flex items-center gap-3 rounded-2xl border border-line bg-asphalt p-3 font-sans">
           <p className="min-w-0 flex-1 text-[12px] leading-4 text-mute">
             Want tomorrow’s city in your feed? This joins{' '}
